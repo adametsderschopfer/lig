@@ -414,6 +414,21 @@ Documentation rules:
 - Before declaring work complete, review documentation alongside the code, run its formatting
   checks, and mention the documentation changes in the completion report.
 
+#### Clear Technical Writing
+
+Use the user's five writing rules inspired by ASD-STE100. Apply these rules to new and changed
+responses, documentation, and code comments.
+
+1. Use active voice. Name the actor when the action could otherwise be unclear.
+2. Limit each sentence to 20 words.
+3. Express one idea per sentence.
+4. Use one consistent term for each concept. Do not alternate synonyms for the same concept.
+5. Use plain, literal language. Avoid idioms and jargon.
+
+Keep API names, commands, and code identifiers exact. Explain required technical terms when you
+introduce them. Preserve code and command syntax when editing prose. Review new and changed text
+against these rules before completing a task.
+
 ### 14. AI Coding Agent Workflow
 
 Before implementing a change:
