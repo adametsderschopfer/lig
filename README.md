@@ -86,5 +86,8 @@ Build checks do not establish visual correctness on another platform.
 - [Graphics fallback](docs/adr/0002-graphics-fallback.md)
 - [Development rules](AGENTS.md)
 
+`AGENTS.md` lists essential requirements and required reading. Detailed rules live in `docs/rules/`,
+grouped by topic. Read the applicable files explicitly before making changes.
+
 English is the primary documentation language. Russian translations are secondary when provided.
 Update affected documentation with each implementation change.

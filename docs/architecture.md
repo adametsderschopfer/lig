@@ -58,3 +58,8 @@ physical GPU availability. Check native rendering separately on each supported p
 
 - [Module boundaries](adr/0001-module-boundaries.md)
 - [Graphics fallback](adr/0002-graphics-fallback.md)
+
+## Development rules
+
+[AGENTS.md](../AGENTS.md) directs contributors to topic-specific rules in `docs/rules/`. Those files
+define development requirements. This document describes the implemented application.
