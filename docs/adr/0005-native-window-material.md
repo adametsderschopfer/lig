@@ -15,7 +15,8 @@ The project forbids unsafe code in application modules.
 
 Use `window-vibrancy` 0.8.1 as a macOS-only dependency.
 Call its safe Liquid Glass API through Iced's `window::run` callback after window creation.
-Request the Clear style without a custom tint, corner radius, or inset panel.
+Prefer Regular over Clear to reduce background detail.
+Request the Regular style without a custom tint, corner radius, or inset panel.
 Keep native window controls and extend macOS content beneath the title bar.
 Use Iced's dark theme to match native appearance with light greeting text.
 

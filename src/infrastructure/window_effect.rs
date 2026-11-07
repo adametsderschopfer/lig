@@ -4,7 +4,7 @@
 pub(crate) fn apply(window: &dyn iced::window::Window) -> bool {
     use window_vibrancy::{LiquidGlassOptions, NSGlassEffectViewStyle, apply_liquid_glass};
 
-    let options = LiquidGlassOptions::new(NSGlassEffectViewStyle::Clear);
+    let options = LiquidGlassOptions::new(NSGlassEffectViewStyle::Regular);
     apply_liquid_glass(window, options).is_ok()
 }
 

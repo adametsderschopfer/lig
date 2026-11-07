@@ -19,7 +19,9 @@ See [language selection](i18n.md#language-selection) for startup behavior.
 
 ## Window material
 
-On macOS 26+, request native Liquid Glass with the Clear style.
+Use the denser native material to reduce distracting text behind the window.
+
+On macOS 26+, request native Liquid Glass with the Regular style.
 Clear the Iced background after native material initialization succeeds.
 The native material lets users see content behind the window.
 Keep system window corners and controls. Add no inset panel, gradient, outline, shadow, or custom corner radius.
