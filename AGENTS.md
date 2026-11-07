@@ -13,6 +13,9 @@
 - Fix failed checks. Do not weaken tests or skip checks.
 - Use Make, Cargo, and dprint. Do not introduce Node.js or npm.
 - Keep documentation current in the same change.
+- Keep technical details out of the interface. Follow [user-facing content rules](docs/rules/user-facing-content.md).
+- Store every application text in i18n catalogs. Maintain English, Russian, and Spanish translations
+  together.
 - Write documentation and comments in English first. Use Russian as a secondary language when
   useful.
 - Apply the five writing rules in [documentation rules](docs/rules/documentation.md) to prose.
@@ -31,6 +34,7 @@ Always read:
 - [Rust quality, separate tests, and checks](docs/rules/quality.md)
 - [Supported platforms and graphics priorities](docs/rules/platforms.md)
 - [Documentation and writing](docs/rules/documentation.md)
+- [User-facing content](docs/rules/user-facing-content.md)
 
 Read additional rules for the task:
 
@@ -38,6 +42,7 @@ Read additional rules for the task:
 | --------------------------------------------------------- | -------------------------------------------------- |
 | Change code, modules, dependencies, or architecture       | [Architecture](docs/rules/architecture.md)         |
 | Change Iced state, messages, views, styling, or animation | [Iced and interface design](docs/rules/iced-ui.md) |
+| Add or change application text or language behavior       | [Internationalization](docs/rules/i18n.md)         |
 | Work on graph visualization, editing, audio, or AI        | [Feature-specific rules](docs/rules/features.md)   |
 
 Read [the current architecture](docs/architecture.md) and affected feature documents before

@@ -27,6 +27,8 @@ Rules:
 8. Keep UI-specific state separate from domain data.
 9. Avoid unnecessary global application state.
 10. Avoid rebuilding or recalculating expensive data when localized updates are sufficient.
+11. Obtain every display text from i18n. Follow [the translation rules](i18n.md).
+12. Keep technical details out of widgets. Follow [user-facing content rules](user-facing-content.md).
 
 Use the Iced API idiomatically rather than forcing patterns from React, Redux, or other UI
 frameworks into the project.

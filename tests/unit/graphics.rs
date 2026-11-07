@@ -104,17 +104,24 @@ fn child_gets_exact_backend_and_original_arguments() {
 
 #[test]
 fn only_graphics_creation_errors_trigger_fallback() {
+    let i18n = I18n::new(crate::shared::i18n::Language::English);
     let graphics_error = iced_test::renderer::graphics::Error::List(Vec::new());
 
     assert_eq!(
-        application_exit_code(Err(iced::Error::GraphicsCreationFailed(graphics_error))),
+        application_exit_code(
+            &i18n,
+            Err(iced::Error::GraphicsCreationFailed(graphics_error))
+        ),
         GRAPHICS_UNAVAILABLE
     );
-    assert_eq!(application_exit_code(Ok(())), 0);
+    assert_eq!(application_exit_code(&i18n, Ok(())), 0);
     assert_eq!(
-        application_exit_code(Err(iced::Error::ExecutorCreationFailed(io::Error::other(
-            "test"
-        )))),
+        application_exit_code(
+            &i18n,
+            Err(iced::Error::ExecutorCreationFailed(io::Error::other(
+                "test"
+            )))
+        ),
         1
     );
 }

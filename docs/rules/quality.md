@@ -13,6 +13,7 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - Check window settings and Iced styles when changing opacity.
 - Preserve assertions and coverage when moving tests.
 - Do not disable or weaken tests to pass checks.
+- Validate all three i18n catalogs and translated interface layouts when changing application text.
 
 ## Required checks
 

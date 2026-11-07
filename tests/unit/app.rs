@@ -1,8 +1,14 @@
 use super::*;
+use crate::shared::i18n::Language;
+
+fn english_application()
+-> iced::Application<impl Program<State = Lig, Message = Message, Theme = Theme>> {
+    application(Rc::new(I18n::new(Language::English)))
+}
 
 #[test]
 fn application_boots_into_the_welcome_screen() {
-    let app = application();
+    let app = english_application();
     let (state, _) = app.boot();
     let settings = Program::window(&app).expect("The application must open a window");
 
@@ -20,7 +26,7 @@ fn application_boots_into_the_welcome_screen() {
 
 #[test]
 fn native_window_is_opaque() {
-    let app = application();
+    let app = english_application();
     let settings = Program::window(&app).expect("The application must open a window");
 
     assert!(!settings.transparent);
@@ -28,7 +34,7 @@ fn native_window_is_opaque() {
 
 #[test]
 fn background_stays_opaque_in_every_theme() {
-    let app = application();
+    let app = english_application();
     let (state, _) = app.boot();
 
     for theme in Theme::ALL {
@@ -41,11 +47,34 @@ fn background_stays_opaque_in_every_theme() {
 
 #[test]
 fn window_title_contains_the_product_name() {
-    let app = application();
+    let app = english_application();
     let (state, _) = app.boot();
 
     assert_eq!(
         Program::title(&app, &state, window::Id::unique()),
         "lig — Life is Graph"
     );
+}
+
+#[test]
+fn title_and_initial_screen_use_the_selected_language() {
+    for (language, title, greeting) in [
+        (Language::English, "lig — Life is Graph", "Hello, world!"),
+        (Language::Russian, "lig — Жизнь — это граф", "Привет, мир!"),
+        (
+            Language::Spanish,
+            "lig — La vida es un grafo",
+            "¡Hola, mundo!",
+        ),
+    ] {
+        let app = application(Rc::new(I18n::new(language)));
+        let (state, _) = app.boot();
+        assert_eq!(Program::title(&app, &state, window::Id::unique()), title);
+        let mut ui = iced_test::Simulator::with_size(
+            iced::Settings::default(),
+            (320.0, 240.0),
+            state.view(),
+        );
+        assert!(ui.find(greeting).unwrap().visible_bounds().is_some());
+    }
 }

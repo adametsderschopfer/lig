@@ -18,7 +18,7 @@ defines no advisory ignore list.
 
 ## Findings on 2026-11-07
 
-The local audit scanned 401 dependencies. It returned zero vulnerability-class findings and six
+The local audit scanned 416 dependencies. It returned zero vulnerability-class findings and six
 informational findings.
 
 | Dependency      | Version | Classification | Advisory                                                              |

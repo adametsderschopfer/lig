@@ -4,6 +4,11 @@ lig is a native desktop application built with Rust and Iced. The initial screen
 world!** on an opaque glass surface. Iced draws the gradient, border, rounded corners, and shadow.
 The application uses a fixed light theme.
 
+The interface and startup messages support English, Russian, and Spanish. The application uses the
+system language and falls back to English for unsupported locales. Set `LIG_LANG` to `en`, `ru`, or
+`es` to override it. See [internationalization](docs/features/i18n.md) for platform-specific
+commands and translation requirements.
+
 macOS is the primary development platform. The project also targets Windows and Linux.
 
 ## Setup
@@ -99,6 +104,7 @@ These checks do not verify window appearance or every GPU backend.
 
 - [Architecture](docs/architecture.md)
 - [Welcome feature](docs/features/welcome.md)
+- [Internationalization](docs/features/i18n.md)
 - [Module boundaries](docs/adr/0001-module-boundaries.md)
 - [Graphics fallback](docs/adr/0002-graphics-fallback.md)
 - [Development rules](AGENTS.md)

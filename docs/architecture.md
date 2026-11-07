@@ -14,6 +14,9 @@ processing remain future features. The repository contains no persistence or dom
 | `src/app/mod.rs`                 | Own application state, messages, window configuration, and Iced composition |
 | `src/features/welcome.rs`        | Describe the greeting interface                                             |
 | `src/shared/theme.rs`            | Define light-theme colors, spacing, typography, and surface effects         |
+| `src/shared/i18n.rs`             | Select supported languages and format embedded Fluent messages              |
+| `src/infrastructure/locale.rs`   | Read the language override and native system locale                         |
+| `locales/`                       | Maintain English, Russian, and Spanish message catalogs                     |
 | `src/infrastructure/graphics.rs` | Select graphics backends and manage child processes                         |
 | `tests/unit/`                    | Verify module behavior separately from production code                      |
 
@@ -26,6 +29,12 @@ flowchart TD
     App --> Welcome[features::welcome]
     App --> Theme[shared::theme]
     Welcome --> Theme
+    Main --> Locale[infrastructure::locale]
+    Main --> I18n[shared::i18n]
+    Locale --> I18n
+    App --> I18n
+    Welcome --> I18n
+    Graphics --> I18n
 ```
 
 The entry point passes the application runner into the graphics launcher. Infrastructure does not
@@ -35,14 +44,19 @@ code does not depend on application state.
 ## State and messages
 
 The application follows The Elm Architecture. `Lig` owns application state. The current state
-contains no persistent data. `Message` represents application events. The greeting screen currently
-produces no messages. `update` processes messages. `view` delegates interface construction to the
-welcome feature. The application creates no asynchronous tasks or subscriptions yet.
+contains an immutable localizer and no persistent data. `Message` represents application events. The
+greeting screen currently produces no messages. `update` processes messages. `view` delegates
+interface construction to the welcome feature. The application creates no asynchronous tasks or
+subscriptions yet.
 
 Add domain models only when features require them. Keep future domain models independent of Iced and
 concrete infrastructure. Use application services when business operations need coordination.
 
 ## Presentation
+
+The entry point creates the localizer before starting graphics. The application and graphics
+launcher share it through explicit references. See [internationalization](features/i18n.md) for
+language selection and fallback behavior.
 
 The theme module owns all current styling values. Window dimensions belong to application
 configuration. The current release uses a light theme. Dark themes and animations remain future
@@ -58,6 +72,7 @@ physical GPU availability. Check native rendering separately on each supported p
 
 - [Module boundaries](adr/0001-module-boundaries.md)
 - [Graphics fallback](adr/0002-graphics-fallback.md)
+- [Embedded localization](adr/0003-embedded-localization.md)
 
 ## Development rules
 

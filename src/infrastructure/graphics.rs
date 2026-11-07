@@ -4,6 +4,7 @@
 //! Native event loops cannot restart within one process.
 //! Child environment settings avoid changes to the parent environment.
 
+use crate::shared::i18n::{FluentArgs, I18n, Key};
 use std::env;
 use std::ffi::OsString;
 use std::io;
@@ -50,33 +51,37 @@ fn priority(os: &str) -> Option<&'static [Backend]> {
     }
 }
 
-pub(crate) fn run(application: impl FnOnce() -> iced::Result) -> ExitCode {
+pub(crate) fn run(i18n: &I18n, application: impl FnOnce() -> iced::Result) -> ExitCode {
     if env::var_os(CHILD_MARKER).as_deref() == Some("1".as_ref()) {
-        return ExitCode::from(application_exit_code(application()));
+        return ExitCode::from(application_exit_code(i18n, application()));
     }
 
-    match launch() {
+    match launch(i18n) {
         Ok(Some(code)) => ExitCode::from(code),
         Ok(None) => {
-            eprintln!("lig: none of the platform graphics backends could be initialized");
+            eprintln!("{}", i18n.text(Key::GraphicsUnavailable));
             ExitCode::FAILURE
         }
         Err(error) => {
-            eprintln!("lig: could not start the application: {error}");
+            eprintln!(
+                "{}",
+                error_message(i18n, Key::StartFailed, error.to_string())
+            );
             ExitCode::FAILURE
         }
     }
 }
 
-fn launch() -> io::Result<Option<u8>> {
-    let backends = priority(env::consts::OS).ok_or_else(|| {
-        io::Error::new(io::ErrorKind::Unsupported, "unsupported operating system")
-    })?;
+fn launch(i18n: &I18n) -> io::Result<Option<u8>> {
+    let backends = priority(env::consts::OS)
+        .ok_or_else(|| io::Error::new(io::ErrorKind::Unsupported, i18n.text(Key::UnsupportedOs)))?;
     let executable = env::current_exe()?;
     let arguments: Vec<_> = env::args_os().skip(1).collect();
 
     try_backends(backends, |backend| {
-        eprintln!("lig: trying {}", backend.name());
+        let mut args = FluentArgs::new();
+        args.set("backend", backend.name());
+        eprintln!("{}", i18n.format(Key::GraphicsTrying, &args));
         let status = child_command(&executable, &arguments, backend).status()?;
 
         // Signals and platform-specific crash codes are fatal, not GPU fallbacks.
@@ -112,15 +117,31 @@ fn try_backends(
     Ok(None)
 }
 
-fn application_exit_code(result: iced::Result) -> u8 {
+fn error_message(i18n: &I18n, key: Key, error: String) -> String {
+    let mut args = FluentArgs::new();
+    args.set("error", error);
+    i18n.format(key, &args)
+}
+
+fn application_exit_code(i18n: &I18n, result: iced::Result) -> u8 {
     match result {
         Ok(()) => 0,
         Err(iced::Error::GraphicsCreationFailed(error)) => {
-            eprintln!("lig: graphics initialization failed: {error:?}");
+            eprintln!(
+                "{}",
+                error_message(
+                    i18n,
+                    Key::GraphicsInitializationFailed,
+                    format!("{error:?}")
+                )
+            );
             GRAPHICS_UNAVAILABLE
         }
         Err(error) => {
-            eprintln!("lig: application failed: {error:?}");
+            eprintln!(
+                "{}",
+                error_message(i18n, Key::ApplicationFailed, format!("{error:?}"))
+            );
             1
         }
     }
