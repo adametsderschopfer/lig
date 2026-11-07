@@ -18,7 +18,7 @@ defines no advisory ignore list.
 
 ## Findings on 2026-11-07
 
-This snapshot predates the `window-vibrancy` dependency addition.
+This snapshot predates the native window material dependency changes.
 The user deferred the next audit. These findings do not describe the updated lockfile.
 
 The local audit scanned 416 dependencies. It returned zero vulnerability-class findings and six

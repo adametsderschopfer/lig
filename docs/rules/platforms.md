@@ -16,6 +16,7 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - Use native Liquid Glass for the window on supported macOS versions.
 - Show an opaque neutral gray background when Liquid Glass is unavailable or initialization fails.
 - Keep the Iced background transparent only after native material initialization succeeds.
+- Keep native material below the renderer. Never blur application content with the background material.
 - Preserve native window controls and system window corners.
 - Do not simulate window glass with inset panels, gradients, outlines, shadows, or custom corner radii.
 

@@ -2,7 +2,7 @@
 
 lig is a native desktop application built with Rust and Iced.
 The initial screen shows **Hello, world!** at the center of the window.
-On macOS 26+, the application requests native Liquid Glass through `window-vibrancy`.
+On macOS 26+, the application creates native Liquid Glass through safe AppKit bindings.
 The transparent background exposes the native material after initialization succeeds.
 Other platforms, older macOS versions, and initialization failures use a plain dark gray background.
 The interface uses a dark theme with native window controls.

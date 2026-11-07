@@ -36,8 +36,12 @@ Show no technical status message for this fallback.
 `app` owns window configuration, material readiness, and message routing.
 `ui::screens::welcome` centers the greeting. `ui::theme` defines text and background colors.
 `infrastructure::window_effect` applies the native material through Iced's window callback.
-The macOS implementation uses the safe `window-vibrancy` API.
-The dependency checks the macOS version before creating the native material.
+The macOS implementation uses safe `objc2` and `objc2-app-kit` APIs.
+It checks native glass availability before creating the material.
+It matches Iced's window handle against retained AppKit content views without dereferencing raw pointers.
+It places glass below the content view within their shared parent.
+It verifies sibling order before enabling transparency.
+The renderer keeps its original content view, frame, and input handling.
 Other platforms return an unavailable result without native material access.
 `i18n` supplies translated messages. The screen performs no I/O and stores no persistent data.
 
@@ -46,10 +50,14 @@ Other platforms return an unavailable result without native material access.
 Application tests cover window configuration, initial opacity, and material completion transitions.
 Welcome tests cover greeting visibility and centering at minimum, default, and larger sizes in all three languages.
 Theme tests cover the transparent material background and opaque gray fallback.
+Native ordering tests reject reversed, missing, and identical view identities.
 Run `make test` to execute these checks.
 
 Native appearance needs a separate manual check on macOS 26+.
-Place another window behind lig and check transparency, text visibility, resizing, and native controls.
+Place another window with text behind lig.
+Confirm that background text blurs while the greeting remains sharp.
+Resize the window and confirm that the greeting stays centered.
+Check native controls and verify that the glass still covers the content area.
 Check gray fallback separately on older macOS, Windows, and Linux.
 Headless tests cannot establish native material appearance.
 

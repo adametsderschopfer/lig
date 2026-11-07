@@ -16,7 +16,9 @@ unic-langid = { version = "0.9.6", features = ["macros"] }
 [target.'cfg(target_os = "macos")'.dependencies]
 # Enable the optional macOS fallback backends in Iced's wgpu dependency.
 wgpu = { version = "27.0.1", default-features = false, features = ["vulkan-portability", "angle"] }
-window-vibrancy = "0.8.1"
+objc2 = "0.6.5"
+objc2-app-kit = { version = "0.3.2", default-features = false, features = ["std", "NSApplication", "NSButton", "NSControl", "NSGlassEffectView", "NSGraphics", "NSResponder", "NSView", "NSWindow"] }
+raw-window-handle = "0.6.2"
 
 [dev-dependencies]
 fluent-syntax = "0.12.0"

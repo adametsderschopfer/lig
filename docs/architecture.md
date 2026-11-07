@@ -34,7 +34,10 @@ src/
     │   ├── mod.rs
     │   └── tests.rs
     ├── locale.rs
-    └── window_effect.rs
+    └── window_effect/
+        ├── mod.rs
+        ├── macos.rs
+        └── tests.rs
 
 locales/
 docs/
@@ -47,7 +50,7 @@ docs/
 | `src/ui/screens/welcome/mod.rs` | Describe the greeting screen |
 | `src/ui/theme/mod.rs` | Define greeting typography, text color, and background fallback |
 | `src/i18n/mod.rs` | Select supported languages and format embedded Fluent messages |
-| `src/infrastructure/window_effect.rs` | Apply native Liquid Glass through the window handle |
+| `src/infrastructure/window_effect/` | Apply native Liquid Glass through the window handle |
 | `src/infrastructure/locale.rs` | Read the language override and native system locale |
 | `src/infrastructure/graphics/mod.rs` | Select graphics backends and manage child processes |
 | `locales/` | Maintain English, Russian, and Spanish catalogs |
@@ -106,7 +109,9 @@ A completion message enables background transparency only after initialization s
 
 Window dimensions belong to application configuration. The theme module owns styling values.
 The application uses a dark theme and an initially opaque gray background.
-The native material module requests Liquid Glass on macOS 26+ through `window-vibrancy`.
+The native material module creates Liquid Glass through safe AppKit bindings on macOS 26+.
+The glass view and renderer content view share a parent. The glass view sits below the renderer.
+The module verifies sibling order before reporting successful initialization.
 Other platforms and failed initialization retain the gray background.
 See [the native material decision](adr/0005-native-window-material.md) for platform boundaries and verification limits.
 See [internationalization](features/i18n.md) for language selection and fallback behavior.
