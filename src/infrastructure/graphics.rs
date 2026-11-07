@@ -4,7 +4,7 @@
 //! Native event loops cannot restart within one process.
 //! Child environment settings avoid changes to the parent environment.
 
-use crate::shared::i18n::{FluentArgs, I18n, Key};
+use crate::i18n::{FluentArgs, I18n, Key};
 use std::env;
 use std::ffi::OsString;
 use std::io;

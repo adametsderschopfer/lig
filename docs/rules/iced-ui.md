@@ -20,8 +20,8 @@ Rules:
 1. Keep views declarative and free from business logic.
 2. Do not perform blocking I/O inside UI update or rendering paths.
 3. Use typed messages for state transitions.
-4. Organize messages and state by feature when appropriate.
-5. Delegate complex operations to application services.
+4. Keep visual state near screens and components. Coordinate application-wide messages in `app`.
+5. Delegate user operations to `application`. Keep data invariants and algorithms in `domain`.
 6. Use `Task` for asynchronous operations and `Subscription` for ongoing event streams.
 7. Do not store persistent domain data exclusively in UI state.
 8. Keep UI-specific state separate from domain data.

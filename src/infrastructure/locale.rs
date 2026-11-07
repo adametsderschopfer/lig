@@ -1,6 +1,6 @@
 //! Read the application override and native system locale at startup.
 
-use crate::shared::i18n::Language;
+use crate::i18n::Language;
 
 pub(crate) fn detect() -> Language {
     let explicit = std::env::var("LIG_LANG").ok();

@@ -2,79 +2,115 @@
 
 ## Scope
 
-lig currently provides a native greeting window and platform-specific graphics selection. The
-application uses one Rust binary crate. Notes, editing, graph visualization, recording, and AI
-processing remain future features. The repository contains no persistence or domain data yet.
+lig uses a layered architecture within one Rust binary crate.
+The application currently provides a localized greeting window and platform-specific graphics startup.
+Documents, editing, graph operations, recording, and AI processing remain future capabilities.
+The repository contains no persistence or business operations yet.
 
-## Modules
+## Current structure
 
-| Module                           | Responsibility                                                              |
-| -------------------------------- | --------------------------------------------------------------------------- |
-| `src/main.rs`                    | Connect the application and graphics launcher                               |
-| `src/app/mod.rs`                 | Own application state, messages, window configuration, and Iced composition |
-| `src/features/welcome.rs`        | Describe the greeting interface                                             |
-| `src/shared/theme.rs`            | Define light-theme colors, spacing, typography, and surface effects         |
-| `src/shared/i18n.rs`             | Select supported languages and format embedded Fluent messages              |
-| `src/infrastructure/locale.rs`   | Read the language override and native system locale                         |
-| `locales/`                       | Maintain English, Russian, and Spanish message catalogs                     |
-| `src/infrastructure/graphics.rs` | Select graphics backends and manage child processes                         |
-| `tests/unit/`                    | Verify module behavior separately from production code                      |
+```text
+src/
+├── main.rs
+├── app/
+│   └── mod.rs
+├── ui/
+│   ├── mod.rs
+│   ├── screens/
+│   │   ├── mod.rs
+│   │   └── welcome.rs
+│   └── theme.rs
+├── i18n/
+│   └── mod.rs
+└── infrastructure/
+    ├── mod.rs
+    ├── graphics.rs
+    └── locale.rs
 
-## Dependencies
+locales/
+tests/unit/
+docs/
+```
+
+| Module | Responsibility |
+| --- | --- |
+| `src/main.rs` | Select the startup language and connect the application with the graphics launcher |
+| `src/app/mod.rs` | Own application UI state, messages, window configuration, and Iced composition |
+| `src/ui/screens/welcome.rs` | Describe the greeting screen |
+| `src/ui/theme.rs` | Define colors, spacing, typography, and surface effects |
+| `src/i18n/mod.rs` | Select supported languages and format embedded Fluent messages |
+| `src/infrastructure/locale.rs` | Read the language override and native system locale |
+| `src/infrastructure/graphics.rs` | Select graphics backends and manage child processes |
+| `locales/` | Maintain English, Russian, and Spanish catalogs |
+| `tests/unit/` | Verify behavior separately from production code |
+
+## Current dependencies
 
 ```mermaid
 flowchart TD
     Main[main] --> App[app]
     Main --> Graphics[infrastructure::graphics]
-    App --> Welcome[features::welcome]
-    App --> Theme[shared::theme]
-    Welcome --> Theme
     Main --> Locale[infrastructure::locale]
-    Main --> I18n[shared::i18n]
-    Locale --> I18n
+    Main --> I18n[i18n]
+    App --> Welcome[ui::screens::welcome]
+    App --> Theme[ui::theme]
     App --> I18n
+    Welcome --> Theme
     Welcome --> I18n
+    Locale --> I18n
     Graphics --> I18n
 ```
 
-The entry point passes the application runner into the graphics launcher. Infrastructure does not
-import feature modules. The welcome feature depends on shared presentation code. Shared presentation
-code does not depend on application state.
+Infrastructure and UI modules do not import each other.
+The entry point supplies the localizer and application runner through explicit dependencies.
+The localization module does not depend on Iced or operating-system access.
 
-## State and messages
+## Logic placement
 
-The application follows The Elm Architecture. `Lig` owns application state. The current state
-contains an immutable localizer and no persistent data. `Message` represents application events. The
-greeting screen currently produces no messages. `update` processes messages. `view` delegates
-interface construction to the welcome feature. The application creates no asynchronous tasks or
-subscriptions yet.
+`app` handles composition, application-wide UI state, and Iced message routing.
+`ui` handles presentation and visual interaction state.
+`infrastructure` handles concrete external operations.
+`i18n` formats application messages.
 
-Add domain models only when features require them. Keep future domain models independent of Iced and
-concrete infrastructure. Use application services when business operations need coordination.
+Add `application/` when user operations need coordination beyond UI behavior.
+Examples include creating documents, saving changes, and connecting nodes.
+Add `domain/` when documents, graph data, invariants, or algorithms require independent logic.
+Keep both layers independent of Iced and concrete infrastructure implementations.
+Use contracts at real external boundaries when application scenarios need them.
 
-## Presentation
+Neither layer exists yet because the greeting screen has no business operations.
+Likewise, add `ui/components/` when reusable components become necessary.
+See [architecture rules](rules/architecture.md) for allowed dependencies and placement requirements.
 
-The entry point creates the localizer before starting graphics. The application and graphics
-launcher share it through explicit references. See [internationalization](features/i18n.md) for
-language selection and fallback behavior.
+## State and presentation
 
-The theme module owns all current styling values. Window dimensions belong to application
-configuration. The current release uses a light theme. Dark themes and animations remain future
-work. The glass surface stays opaque on every platform.
+The interface retains The Elm Architecture: state, messages, update, and view.
+`Lig` owns an immutable localizer and no persistent data.
+The current greeting screen produces no messages.
+`view` delegates presentation to `ui::screens::welcome`.
+The application creates no asynchronous tasks or subscriptions yet.
+
+Window dimensions belong to application configuration. The theme module owns styling values.
+The application uses a light theme and an opaque glass surface.
+See [internationalization](features/i18n.md) for language selection and fallback behavior.
+Keep technical details outside the interface, following [user-facing content rules](rules/user-facing-content.md).
 
 ## Verification
 
-Run `make check` and `make build` after changes. Separate test files preserve access through child
-modules. Interface tests render without a display or GPU. Test graphics selection independently from
-physical GPU availability. Check native rendering separately on each supported platform.
+Run `make check` and `make build` after changes unless the user explicitly defers execution.
+Separate test files preserve access through child modules.
+Interface tests run without a display or GPU.
+Test graphics selection independently from physical GPU availability.
+Check native rendering separately on each supported platform.
 
 ## Decisions
 
-- [Module boundaries](adr/0001-module-boundaries.md)
+- [Layered architecture](adr/0004-layered-architecture.md)
+- [Original module boundaries](adr/0001-module-boundaries.md), superseded by the layered structure
 - [Graphics fallback](adr/0002-graphics-fallback.md)
 - [Embedded localization](adr/0003-embedded-localization.md)
 
 ## Development rules
 
-[AGENTS.md](../AGENTS.md) directs contributors to topic-specific rules in `docs/rules/`. Those files
-define development requirements. This document describes the implemented application.
+[AGENTS.md](../AGENTS.md) directs contributors to topic-specific rules in `docs/rules/`.
+Those files define development requirements. This document describes the implemented application.

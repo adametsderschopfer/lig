@@ -5,6 +5,7 @@
 ## Essential requirements
 
 - Maintain macOS, Windows, and Linux support.
+- Organize code by layers. Follow [architecture rules](docs/rules/architecture.md).
 - Preserve the graphics priorities in [platform rules](docs/rules/platforms.md).
 - Keep the glass background opaque.
 - Keep tests in separate files under `tests/`.
@@ -43,10 +44,10 @@ Read additional rules for the task:
 | Change code, modules, dependencies, or architecture       | [Architecture](docs/rules/architecture.md)         |
 | Change Iced state, messages, views, styling, or animation | [Iced and interface design](docs/rules/iced-ui.md) |
 | Add or change application text or language behavior       | [Internationalization](docs/rules/i18n.md)         |
-| Work on graph visualization, editing, audio, or AI        | [Feature-specific rules](docs/rules/features.md)   |
+| Work on graph visualization, editing, audio, or AI        | [Subsystem rules](docs/rules/subsystems.md)   |
 
 Read [the current architecture](docs/architecture.md) and affected feature documents before
-implementation. Feature-specific rules guide future development without requiring empty modules.
+implementation. Subsystem rules guide future development within the layers. Do not create empty modules.
 
 ## Maintain the rules
 

@@ -1,7 +1,7 @@
 //! Compose application state, messages, and window settings.
 
-use crate::shared::i18n::{I18n, Key};
-use crate::{features::welcome, shared::theme};
+use crate::i18n::{I18n, Key};
+use crate::ui::{screens::welcome, theme};
 use iced::{Element, Program, Size, Theme, window};
 use std::rc::Rc;
 

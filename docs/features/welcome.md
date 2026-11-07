@@ -17,8 +17,8 @@ See [language selection](i18n.md#language-selection) for startup behavior.
 
 ## Implementation
 
-`app` owns window configuration and application state. `features::welcome` builds the view.
-`shared::theme` owns styling values. `shared::i18n` supplies translated messages. The screen
+`app` owns window configuration and application state. `ui::screens::welcome` builds the view.
+`ui::theme` owns styling values. `i18n` supplies translated messages. The screen
 performs no I/O and stores no persistent data. It emits no messages.
 
 ## Verification

@@ -9,8 +9,8 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - **Rendering:** Iced's native rendering stack, with GPU acceleration where appropriate.
 - **Primary Platform:** macOS.
 - **Additional Platforms:** Windows and Linux.
-- **Architecture:** Modular Monolith + The Elm Architecture + pragmatic Clean Architecture.
-- **Code Organization:** Feature-Based.
+- **Architecture:** Layered architecture in one Rust crate, with The Elm Architecture for the interface.
+- **Code Organization:** Layers with explicit responsibilities and dependency boundaries.
 
 Do not introduce Electron, Tauri, HTML, CSS, JavaScript UI frameworks, Qt, or custom C++ code.
 
@@ -46,56 +46,67 @@ Do not introduce architectural complexity without a concrete reason.
 
 ## Project Structure
 
-Organize the application primarily by features.
+Organize source code by responsibility at the top level.
+Use the following layers as implementation needs arise:
 
-Recommended initial structure:
+| Layer | Responsibility |
+| --- | --- |
+| `app/` | Compose dependencies, configure windows, own application UI state, and route messages |
+| `ui/screens/` | Describe screens and screen-specific presentation behavior |
+| `ui/components/` | Provide reusable interface components when needed |
+| `ui/theme.rs` | Define presentation styles and design values |
+| `application/` | Coordinate user operations such as creating documents, saving changes, and connecting nodes |
+| `domain/` | Define documents, graph data, algorithms, and business rules |
+| `infrastructure/` | Implement storage, operating-system access, graphics startup, audio, and external services |
+| `i18n/` | Resolve supported languages and format translated messages |
 
-```text
-src/
-├── main.rs
-├── app/
-│   ├── mod.rs
-│   ├── state.rs
-│   ├── message.rs
-│   ├── update.rs
-│   └── subscription.rs
-├── features/
-│   ├── notes/
-│   ├── editor/
-│   ├── graph/
-│   ├── voice/
-│   └── ai/
-├── shared/
-│   ├── ui/
-│   ├── theme/
-│   ├── animation/
-│   └── error/
-└── infrastructure/
-    ├── database/
-    ├── filesystem/
-    ├── audio/
-    └── ai_providers/
+Keep `main.rs` small. Use `main` and `app` to connect concrete implementations.
+Keep translation catalogs under root `locales/`. Keep test implementations under root `tests/`.
 
-docs/
-├── architecture.md
-└── adr/
-```
+The current application needs `app`, `ui`, `infrastructure`, and `i18n`.
+Add `application` and `domain` when actual user operations and business rules require them.
+Add `ui/components` when multiple screens need reusable components.
+Do not create empty directories, placeholder types, or one file for every trivial method.
 
-This is a reference structure, not a requirement to create empty directories.
+Do not restore top-level `features` or miscellaneous `shared` directories.
+Group related modules inside their responsible layer when that improves navigation.
+Keep feature guides under `docs/features/`; documentation topics do not define source architecture.
 
-Each feature may contain its own state, messages, update logic, views, domain models, and
-application services as needed.
+## Dependency Rules
 
-Rules:
+- `domain` must not depend on `app`, `ui`, `application`, `infrastructure`, or `i18n`.
+- `application` may use `domain` and contracts required by its scenarios.
+- Keep `application` independent of Iced, presentation state, localization, and concrete external services.
+- Define external-operation contracts near the application scenarios that need them.
+- `infrastructure` may implement those contracts and use domain types.
+- Infrastructure modules must not import `app` or `ui`.
+- Startup diagnostics may use `i18n`. Keep those messages outside the interface.
+- `ui` may use application results, read-only domain data, and `i18n`.
+- UI modules must not import concrete infrastructure or the application composition layer.
+- Pass presentation messages or callbacks explicitly when the application needs screen events.
+- `i18n` must not import application layers or perform operating-system or file access.
+- `main` and `app` may connect the layers through explicit dependencies.
+- Keep public APIs small. Avoid circular dependencies.
+- Introduce additional Cargo crates only when concrete dependency boundaries justify them.
 
-- Organize functionality by domain or feature.
-- Keep feature implementations encapsulated.
-- Expose minimal public APIs.
-- Avoid circular dependencies.
-- Do not create large miscellaneous `utils`, `helpers`, or `common` modules.
-- Extract shared components only when they are genuinely reusable.
-- Introduce additional Cargo crates only when meaningful dependency boundaries justify them.
-- Use Cargo Workspace when the project grows large enough to benefit from multiple crates.
+These rules describe source dependencies. Runtime calls can reach infrastructure through injected contracts.
+Do not introduce interfaces for types that have no external boundary or substitution need.
+
+## Logic Placement
+
+Keep visual interaction state near its screen or component.
+Examples include selected tabs, open dialogs, focus, and temporary input values.
+Keep application-wide UI state and message routing in `app`.
+
+Put user operations in `application`, such as saving a document or connecting two graph nodes.
+Put data invariants and algorithms in `domain`.
+Put actual disk, database, microphone, and network access in `infrastructure`.
+
+For example, an Iced message can request a save operation.
+The application update function starts a task that calls the save scenario.
+The scenario applies domain rules and uses an injected storage implementation.
+A completion message updates UI state. The interface chooses a localized, nontechnical result message.
+Never block the interface while waiting for an external operation.
 
 ## Domain & Business Logic
 

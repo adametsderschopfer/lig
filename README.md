@@ -100,12 +100,26 @@ advisory data. They do not prove that application code has no security defects. 
 Platform builds check native compilation and linking. Tests use each runner's native environment.
 These checks do not verify window appearance or every GPU backend.
 
+## Project structure
+
+The project uses layers with explicit responsibilities:
+
+- `app/` owns composition, application UI state, and message routing.
+- `ui/screens/` contains screens. `ui/theme.rs` defines presentation styles.
+- `i18n/` formats messages from the three embedded catalogs.
+- `infrastructure/` handles native graphics startup and system locale access.
+
+Source paths above start inside `src/`.
+Add `application/` for user operations and `domain/` for business rules when those responsibilities appear.
+Keep test implementations under root `tests/`.
+See [the architecture guide](docs/architecture.md) for dependencies and the current directory tree.
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)
 - [Welcome feature](docs/features/welcome.md)
 - [Internationalization](docs/features/i18n.md)
-- [Module boundaries](docs/adr/0001-module-boundaries.md)
+- [Layered architecture](docs/adr/0004-layered-architecture.md)
 - [Graphics fallback](docs/adr/0002-graphics-fallback.md)
 - [Development rules](AGENTS.md)
 

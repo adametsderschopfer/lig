@@ -104,7 +104,7 @@ fn child_gets_exact_backend_and_original_arguments() {
 
 #[test]
 fn only_graphics_creation_errors_trigger_fallback() {
-    let i18n = I18n::new(crate::shared::i18n::Language::English);
+    let i18n = I18n::new(crate::i18n::Language::English);
     let graphics_error = iced_test::renderer::graphics::Error::List(Vec::new());
 
     assert_eq!(

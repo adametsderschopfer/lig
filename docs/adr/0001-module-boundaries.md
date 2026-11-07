@@ -1,6 +1,8 @@
 # ADR 0001: Keep one crate with explicit module boundaries
 
-Status: Accepted.
+Status: Superseded by [ADR 0004](0004-layered-architecture.md).
+
+This record describes the earlier organization. ADR 0004 defines the current layer boundaries.
 
 ## Context
 

@@ -1,7 +1,7 @@
 //! Render the initial greeting without application or infrastructure dependencies.
 
-use crate::shared::i18n::{I18n, Key};
-use crate::shared::theme;
+use crate::i18n::{I18n, Key};
+use crate::ui::theme;
 use iced::Element;
 use iced::widget::{center, container, text};
 
@@ -14,5 +14,5 @@ pub(crate) fn view<'a, Message: 'a>(i18n: &I18n) -> Element<'a, Message> {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/welcome.rs"]
+#[path = "../../../tests/unit/welcome.rs"]
 mod tests;
