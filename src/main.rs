@@ -4,8 +4,10 @@ use iced::widget::{center, container, text};
 use iced::{Border, Color, Degrees, Element, Program, Shadow, Size, Theme, Vector};
 use iced::{gradient, theme, window};
 
-fn main() -> iced::Result {
-    application().run()
+mod graphics;
+
+fn main() -> std::process::ExitCode {
+    graphics::run(|| application().run())
 }
 
 fn application() -> iced::Application<impl Program<State = Lig, Message = Message, Theme = Theme>> {
