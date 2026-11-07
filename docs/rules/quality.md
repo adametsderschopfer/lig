@@ -37,9 +37,18 @@ Install cargo-audit 0.22.2 with `cargo install cargo-audit --version 0.22.2 --lo
 security` to check dependencies separately. This check requires network access to refresh RustSec
 advisory data. Investigate vulnerability failures. Do not ignore advisories merely to pass CI.
 
-CI runs separate lint, test, type-check, and release-build jobs for each supported platform.
-Formatting and dependency security use dedicated jobs. Dependency security checks inspect the
-complete lockfile without platform filters.
+CI runs checks, tests, and release builds in sequential stages.
+Keep formatter, linter, type checker, and dependency security in separate jobs within the checks stage.
+Require all checks to succeed before starting test jobs.
+Keep unit and integration tests in separate jobs within the tests stage.
+Require test jobs to succeed before starting release builds.
+Keep the macOS, Windows, and Linux matrix for lint, type checks, tests, and builds.
+Formatting and dependency security use dedicated Linux jobs.
+Dependency security checks inspect the complete lockfile without platform filters.
+Report missing integration test targets explicitly. Do not present missing tests as passed tests.
+Use `needs` for stage dependencies. Do not use `always()` or `continue-on-error` to bypass failed prerequisites.
+Add future jobs to the appropriate stage and update downstream dependencies when required.
+See [the CI guide](../ci.md) for the implemented job graph and commands.
 
 Run static checks after all edits. Fix failures before committing or pushing. Use `make fmt` to
 apply formatting. Run formatting checks afterward. Use `make run` or `cargo run --locked` to start

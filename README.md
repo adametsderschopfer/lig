@@ -95,8 +95,11 @@ Integration tests belong in root `tests/` and use public interfaces or the execu
 The project has no integration tests yet. Create that directory when the first integration test exists.
 
 Interface tests use `iced_test` with the tiny-skia CPU renderer. They require neither a display nor
-a GPU. CI runs separate jobs for Clippy, tests, type checks, and release builds on macOS, Windows,
-and Linux. CI also runs dedicated formatting and dependency security jobs.
+a GPU. CI runs three sequential stages: checks, tests, and release builds.
+The checks stage runs formatter, linter, type checker, and dependency security jobs in parallel.
+The tests stage separates unit tests from integration tests.
+Platform jobs retain the macOS, Windows, and Linux matrix.
+See [the CI guide](docs/ci.md) for dependencies, commands, and integration test discovery.
 
 [cargo-audit](https://github.com/RustSec/rustsec/tree/main/cargo-audit) checks `Cargo.lock` against
 the RustSec advisory database. The security job fails when it finds known vulnerabilities.
@@ -124,6 +127,7 @@ See [the architecture guide](docs/architecture.md) for dependencies and the curr
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Continuous integration](docs/ci.md)
 - [Welcome feature](docs/features/welcome.md)
 - [Internationalization](docs/features/i18n.md)
 - [Layered architecture](docs/adr/0004-layered-architecture.md)

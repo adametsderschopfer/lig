@@ -1,7 +1,7 @@
 # Dependency security checks
 
 Run `make security` to audit the complete `Cargo.lock` file. Install cargo-audit with the command in
-[the setup guide](../README.md#setup). CI runs the same audit in the **Dependency security** job.
+[the setup guide](../README.md#setup). CI runs the same audit in the **Checks / Dependency security** job.
 
 ## Coverage
 
