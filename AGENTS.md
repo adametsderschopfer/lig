@@ -389,6 +389,17 @@ Maintain the following sources of truth:
 
 Documentation rules:
 
+- English is the primary language for all project documentation and code comments, including README,
+  architecture documents, feature documentation, ADRs, Rustdoc, and inline comments.
+- Russian is the secondary language. When both languages are provided, put the English version first
+  and the Russian version second, or link from the English document to a separate Russian
+  translation.
+- Write new documentation and comments in English first. When substantively updating existing
+  Russian-only documentation or comments, provide an English version of the affected content and
+  retain Russian as a secondary translation where useful.
+- Keep translations consistent with the English version; update affected translations in the same
+  change. This language rule does not determine the application's UI language or the language used
+  to communicate with the user.
 - Describe the actual implementation. Clearly distinguish planned behavior from working features.
 - Update affected instructions, examples, links, and diagrams when behavior or structure changes.
 - Keep platform differences and known limitations explicit.
