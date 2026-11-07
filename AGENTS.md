@@ -368,18 +368,40 @@ Develop for macOS first without unnecessarily coupling the application to macOS.
 
 ### 13. Documentation & Architectural Decisions
 
-Maintain:
+Documentation is a required part of application development. A feature or change to application
+behavior, configuration, storage, architecture, or development workflows is not complete until its
+documentation is updated in the same change and commit or pull request.
 
-- `docs/architecture.md` — system overview, modules, and dependency boundaries.
-- `docs/adr/` — important architectural decisions.
+Before implementation, read the relevant project documentation. After implementation, update the
+existing documentation or create the necessary document if none exists.
 
-Use lightweight Architecture Decision Records for significant changes.
+Maintain the following sources of truth:
 
-Document why a decision was made, what alternatives were considered, and its consequences.
+- `README.md` — project overview, setup, dependencies, supported platforms, configuration, run,
+  build, and verification commands.
+- `docs/architecture.md` — the implemented system structure, module responsibilities, data flow, and
+  dependency boundaries.
+- `docs/features/<feature>.md` — documentation for features that need a detailed explanation:
+  purpose, user scenarios, behavior, data model, relevant interfaces, errors, and limitations.
+  Describe persistence and migrations when applicable.
+- `docs/adr/` — lightweight Architecture Decision Records for significant architectural decisions:
+  context, chosen approach, alternatives, trade-offs, and consequences.
 
-Keep documentation aligned with the actual implementation.
+Documentation rules:
 
-Avoid unnecessary documentation for trivial implementation details.
+- Describe the actual implementation. Clearly distinguish planned behavior from working features.
+- Update affected instructions, examples, links, and diagrams when behavior or structure changes.
+- Keep platform differences and known limitations explicit.
+- Keep one authoritative description of each topic and link to it rather than duplicating it.
+- Verify documented commands and examples where practical; report anything that could not be
+  verified.
+- Create documents when they contain useful information; do not create empty templates or
+  directories.
+- Do not duplicate obvious code or document trivial implementation details.
+- For changes that do not affect documented behavior or workflows, such as formatting-only changes,
+  no unrelated documentation rewrite is required.
+- Before declaring work complete, review documentation alongside the code, run its formatting
+  checks, and mention the documentation changes in the completion report.
 
 ### 14. AI Coding Agent Workflow
 
@@ -392,9 +414,11 @@ Before implementing a change:
 5. For significant changes, briefly describe the implementation plan.
 6. Implement the smallest complete solution.
 7. Add or update meaningful tests.
-8. Run relevant quality checks.
-9. Review the changes for unnecessary complexity and architectural violations.
-10. Update architecture documentation when necessary.
+8. Update the affected project documentation as part of the implementation.
+9. Run relevant quality checks, including documentation formatting and applicable documented
+   commands.
+10. Review code and documentation for consistency, unnecessary complexity, and architectural
+    violations.
 
 Additional rules:
 
