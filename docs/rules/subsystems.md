@@ -2,7 +2,8 @@
 
 Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 
-Apply each section when working on that subsystem. These rules do not claim that the subsystem already exists.
+Apply each section when working on that subsystem. These rules do not claim that the subsystem
+already exists.
 
 ## Graph Visualization
 

@@ -1,12 +1,11 @@
 # lig — Life is Graph
 
-lig is a native desktop application built with Rust and Iced.
-The initial screen shows **Hello, world!** at the center of the window.
-On macOS 26+, the application creates native Liquid Glass through safe AppKit bindings.
-The transparent background exposes the native material after initialization succeeds.
-Other platforms, older macOS versions, and initialization failures use a plain dark gray background.
-The interface uses a dark theme with native window controls.
-See [the welcome feature](docs/features/welcome.md) for behavior and verification limits.
+lig is a native desktop application built with Rust and Iced. The initial screen shows **Hello,
+world!** at the center of the window. On macOS 26+, the application creates native Liquid Glass
+through safe AppKit bindings. The transparent background exposes the native material after
+initialization succeeds. Other platforms, older macOS versions, and initialization failures use a
+plain dark gray background. The interface uses a dark theme with native window controls. See
+[the welcome feature](docs/features/welcome.md) for behavior and verification limits.
 
 The interface and startup messages support English, Russian, and Spanish. The application uses the
 system language and falls back to English for unsupported locales. Set `LIG_LANG` to `en`, `ru`, or
@@ -87,19 +86,17 @@ libraries. Metal needs neither fallback library. See
 
 ## Tests and checks
 
-Unit tests live beside their owning modules in `tests.rs` files.
-Each tested module uses a directory with adjacent `mod.rs` and `tests.rs` files.
-The owning module declares `#[cfg(test)] mod tests;`.
-Tests retain private access without expanding production APIs.
-Integration tests belong in root `tests/` and use public interfaces or the executable.
-The project has no integration tests yet. Create that directory when the first integration test exists.
+Unit tests live beside their owning modules in `tests.rs` files. Each tested module uses a directory
+with adjacent `mod.rs` and `tests.rs` files. The owning module declares `#[cfg(test)] mod tests;`.
+Tests retain private access without expanding production APIs. Integration tests belong in root
+`tests/` and use public interfaces or the executable. The project has no integration tests yet.
+Create that directory when the first integration test exists.
 
 Interface tests use `iced_test` with the tiny-skia CPU renderer. They require neither a display nor
-a GPU. CI runs three sequential stages: checks, tests, and release builds.
-The checks stage runs formatter, linter, type checker, and dependency security jobs in parallel.
-The tests stage separates unit tests from integration tests.
-Platform jobs retain the macOS, Windows, and Linux matrix.
-See [the CI guide](docs/ci.md) for dependencies, commands, and integration test discovery.
+a GPU. CI runs three sequential stages: checks, tests, and release builds. The checks stage runs
+formatter, linter, type checker, and dependency security jobs in parallel. The tests stage separates
+unit tests from integration tests. Platform jobs retain the macOS, Windows, and Linux matrix. See
+[the CI guide](docs/ci.md) for dependencies, commands, and integration test discovery.
 
 [cargo-audit](https://github.com/RustSec/rustsec/tree/main/cargo-audit) checks `Cargo.lock` against
 the RustSec advisory database. The security job fails when it finds known vulnerabilities.
@@ -119,10 +116,10 @@ The project uses layers with explicit responsibilities:
 - `i18n/` formats messages from the three embedded catalogs.
 - `infrastructure/` handles graphics startup, native window material, and system locale access.
 
-Source paths above start inside `src/`.
-Add `application/` for user operations and `domain/` for business rules when those responsibilities appear.
-Keep unit tests beside their modules. Reserve root `tests/` for integration tests.
-See [the architecture guide](docs/architecture.md) for dependencies and the current directory tree.
+Source paths above start inside `src/`. Add `application/` for user operations and `domain/` for
+business rules when those responsibilities appear. Keep unit tests beside their modules. Reserve
+root `tests/` for integration tests. See [the architecture guide](docs/architecture.md) for
+dependencies and the current directory tree.
 
 ## Documentation
 

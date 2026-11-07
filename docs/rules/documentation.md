@@ -25,7 +25,8 @@ Maintain the following sources of truth:
 
 Documentation rules:
 
-- Follow [user-facing content rules](user-facing-content.md) when writing interface messages or describing their behavior.
+- Follow [user-facing content rules](user-facing-content.md) when writing interface messages or
+  describing their behavior.
 - Apply [i18n rules](i18n.md) to application text. Maintain English, Russian, and Spanish catalogs
   together.
 - Write project documentation and code comments primarily in English. This includes README,

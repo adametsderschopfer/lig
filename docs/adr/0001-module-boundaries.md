@@ -2,9 +2,9 @@
 
 Status: Superseded by [ADR 0004](0004-layered-architecture.md).
 
-This record describes the earlier organization. ADR 0004 defines the current layer boundaries.
-The historical test layout below no longer applies.
-See [test organization rules](../rules/quality.md#testing--verification) for the current layout.
+This record describes the earlier organization. ADR 0004 defines the current layer boundaries. The
+historical test layout below no longer applies. See
+[test organization rules](../rules/quality.md#testing--verification) for the current layout.
 
 ## Context
 

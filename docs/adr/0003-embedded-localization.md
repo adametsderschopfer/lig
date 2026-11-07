@@ -16,7 +16,8 @@ diagnostics. Use `sys-locale` to read the system locale. Let `LIG_LANG` override
 selection. Use English for unsupported locales and invalid selected messages. Validate every catalog
 directly in tests before fallback can hide defects.
 
-Use nontechnical fallback text when a message is unavailable. Never expose message identifiers in the interface.
+Use nontechnical fallback text when a message is unavailable. Never expose message identifiers in
+the interface.
 
 ## Alternatives
 

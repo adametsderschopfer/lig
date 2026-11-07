@@ -9,7 +9,8 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - **Rendering:** Iced's native rendering stack, with GPU acceleration where appropriate.
 - **Primary Platform:** macOS.
 - **Additional Platforms:** Windows and Linux.
-- **Architecture:** Layered architecture in one Rust crate, with The Elm Architecture for the interface.
+- **Architecture:** Layered architecture in one Rust crate, with The Elm Architecture for the
+  interface.
 - **Code Organization:** Layers with explicit responsibilities and dependency boundaries.
 
 Do not introduce Electron, Tauri, HTML, CSS, JavaScript UI frameworks, Qt, or custom C++ code.
@@ -46,39 +47,40 @@ Do not introduce architectural complexity without a concrete reason.
 
 ## Project Structure
 
-Organize source code by responsibility at the top level.
-Use the following layers as implementation needs arise:
+Organize source code by responsibility at the top level. Use the following layers as implementation
+needs arise:
 
-| Layer | Responsibility |
-| --- | --- |
-| `app/` | Compose dependencies, configure windows, own application UI state, and route messages |
-| `ui/screens/` | Describe screens and screen-specific presentation behavior |
-| `ui/components/` | Provide reusable interface components when needed |
-| `ui/theme/` | Define presentation styles and design values |
-| `application/` | Coordinate user operations such as creating documents, saving changes, and connecting nodes |
-| `domain/` | Define documents, graph data, algorithms, and business rules |
-| `infrastructure/` | Implement storage, operating-system access, graphics startup, audio, and external services |
-| `i18n/` | Resolve supported languages and format translated messages |
+| Layer             | Responsibility                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| `app/`            | Compose dependencies, configure windows, own application UI state, and route messages       |
+| `ui/screens/`     | Describe screens and screen-specific presentation behavior                                  |
+| `ui/components/`  | Provide reusable interface components when needed                                           |
+| `ui/theme/`       | Define presentation styles and design values                                                |
+| `application/`    | Coordinate user operations such as creating documents, saving changes, and connecting nodes |
+| `domain/`         | Define documents, graph data, algorithms, and business rules                                |
+| `infrastructure/` | Implement storage, operating-system access, graphics startup, audio, and external services  |
+| `i18n/`           | Resolve supported languages and format translated messages                                  |
 
-Keep `main.rs` small. Use `main` and `app` to connect concrete implementations.
-Keep translation catalogs under root `locales/`.
-Keep unit tests in adjacent `tests.rs` files. Reserve root `tests/` for integration tests.
-Follow [test organization rules](quality.md#testing--verification) for module declarations and private access.
+Keep `main.rs` small. Use `main` and `app` to connect concrete implementations. Keep translation
+catalogs under root `locales/`. Keep unit tests in adjacent `tests.rs` files. Reserve root `tests/`
+for integration tests. Follow [test organization rules](quality.md#testing--verification) for module
+declarations and private access.
 
-The current application needs `app`, `ui`, `infrastructure`, and `i18n`.
-Add `application` and `domain` when actual user operations and business rules require them.
-Add `ui/components` when multiple screens need reusable components.
-Do not create empty directories, placeholder types, or one file for every trivial method.
+The current application needs `app`, `ui`, `infrastructure`, and `i18n`. Add `application` and
+`domain` when actual user operations and business rules require them. Add `ui/components` when
+multiple screens need reusable components. Do not create empty directories, placeholder types, or
+one file for every trivial method.
 
-Do not restore top-level `features` or miscellaneous `shared` directories.
-Group related modules inside their responsible layer when that improves navigation.
-Keep feature guides under `docs/features/`; documentation topics do not define source architecture.
+Do not restore top-level `features` or miscellaneous `shared` directories. Group related modules
+inside their responsible layer when that improves navigation. Keep feature guides under
+`docs/features/`; documentation topics do not define source architecture.
 
 ## Dependency Rules
 
 - `domain` must not depend on `app`, `ui`, `application`, `infrastructure`, or `i18n`.
 - `application` may use `domain` and contracts required by its scenarios.
-- Keep `application` independent of Iced, presentation state, localization, and concrete external services.
+- Keep `application` independent of Iced, presentation state, localization, and concrete external
+  services.
 - Define external-operation contracts near the application scenarios that need them.
 - `infrastructure` may implement those contracts and use domain types.
 - Infrastructure modules must not import `app` or `ui`.
@@ -91,24 +93,24 @@ Keep feature guides under `docs/features/`; documentation topics do not define s
 - Keep public APIs small. Avoid circular dependencies.
 - Introduce additional Cargo crates only when concrete dependency boundaries justify them.
 
-These rules describe source dependencies. Runtime calls can reach infrastructure through injected contracts.
-Do not introduce interfaces for types that have no external boundary or substitution need.
+These rules describe source dependencies. Runtime calls can reach infrastructure through injected
+contracts. Do not introduce interfaces for types that have no external boundary or substitution
+need.
 
 ## Logic Placement
 
-Keep visual interaction state near its screen or component.
-Examples include selected tabs, open dialogs, focus, and temporary input values.
-Keep application-wide UI state and message routing in `app`.
+Keep visual interaction state near its screen or component. Examples include selected tabs, open
+dialogs, focus, and temporary input values. Keep application-wide UI state and message routing in
+`app`.
 
-Put user operations in `application`, such as saving a document or connecting two graph nodes.
-Put data invariants and algorithms in `domain`.
-Put actual disk, database, microphone, and network access in `infrastructure`.
+Put user operations in `application`, such as saving a document or connecting two graph nodes. Put
+data invariants and algorithms in `domain`. Put actual disk, database, microphone, and network
+access in `infrastructure`.
 
-For example, an Iced message can request a save operation.
-The application update function starts a task that calls the save scenario.
-The scenario applies domain rules and uses an injected storage implementation.
-A completion message updates UI state. The interface chooses a localized, nontechnical result message.
-Never block the interface while waiting for an external operation.
+For example, an Iced message can request a save operation. The application update function starts a
+task that calls the save scenario. The scenario applies domain rules and uses an injected storage
+implementation. A completion message updates UI state. The interface chooses a localized,
+nontechnical result message. Never block the interface while waiting for an external operation.
 
 ## Domain & Business Logic
 

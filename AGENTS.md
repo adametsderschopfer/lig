@@ -7,14 +7,16 @@
 - Maintain macOS, Windows, and Linux support.
 - Organize code by layers. Follow [architecture rules](docs/rules/architecture.md).
 - Preserve the graphics priorities in [platform rules](docs/rules/platforms.md).
-- Use native Liquid Glass when available. Follow the gray fallback policy in [platform rules](docs/rules/platforms.md).
+- Use native Liquid Glass when available. Follow the gray fallback policy in
+  [platform rules](docs/rules/platforms.md).
 - Keep unit tests in adjacent `tests.rs` files. Reserve root `tests/` for integration tests.
 - Add meaningful tests for behavior changes and regression tests for bug fixes.
 - Run `make check` and `make build` after all edits and before completion, commits, or pushes.
 - Fix failed checks. Do not weaken tests or skip checks.
 - Use Make, Cargo, and dprint. Do not introduce Node.js or npm.
 - Keep documentation current in the same change.
-- Keep technical details out of the interface. Follow [user-facing content rules](docs/rules/user-facing-content.md).
+- Keep technical details out of the interface. Follow
+  [user-facing content rules](docs/rules/user-facing-content.md).
 - Store every application text in i18n catalogs. Maintain English, Russian, and Spanish translations
   together.
 - Write documentation and comments in English first. Use Russian as a secondary language when
@@ -44,10 +46,11 @@ Read additional rules for the task:
 | Change code, modules, dependencies, or architecture       | [Architecture](docs/rules/architecture.md)         |
 | Change Iced state, messages, views, styling, or animation | [Iced and interface design](docs/rules/iced-ui.md) |
 | Add or change application text or language behavior       | [Internationalization](docs/rules/i18n.md)         |
-| Work on graph visualization, editing, audio, or AI        | [Subsystem rules](docs/rules/subsystems.md)   |
+| Work on graph visualization, editing, audio, or AI        | [Subsystem rules](docs/rules/subsystems.md)        |
 
 Read [the current architecture](docs/architecture.md) and affected feature documents before
-implementation. Subsystem rules guide future development within the layers. Do not create empty modules.
+implementation. Subsystem rules guide future development within the layers. Do not create empty
+modules.
 
 ## Maintain the rules
 

@@ -20,15 +20,16 @@ fn configure(window: &dyn iced::window::Window) -> Option<()> {
     };
 
     let application = NSApplication::sharedApplication(mtm);
-    let (native_window, content) = application
-        .windows()
-        .to_vec()
-        .into_iter()
-        .find_map(|native_window| {
-            let content = native_window.contentView()?;
-            (Retained::as_ptr(&content).cast() == handle.ns_view.as_ptr())
-                .then_some((native_window, content))
-        })?;
+    let (native_window, content) =
+        application
+            .windows()
+            .to_vec()
+            .into_iter()
+            .find_map(|native_window| {
+                let content = native_window.contentView()?;
+                (Retained::as_ptr(&content).cast() == handle.ns_view.as_ptr())
+                    .then_some((native_window, content))
+            })?;
 
     // Find the shared parent through retained views, without dereferencing the raw window handle.
     let close_button = native_window.standardWindowButton(NSWindowButton::CloseButton)?;

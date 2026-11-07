@@ -1,7 +1,8 @@
 # Dependency security checks
 
 Run `make security` to audit the complete `Cargo.lock` file. Install cargo-audit with the command in
-[the setup guide](../README.md#setup). CI runs the same audit in the **Checks / Dependency security** job.
+[the setup guide](../README.md#setup). CI runs the same audit in the **Checks / Dependency
+security** job.
 
 ## Coverage
 
@@ -18,8 +19,7 @@ defines no advisory ignore list.
 
 ## Findings on 2026-11-07
 
-This snapshot predates the native window material dependency changes.
-The user deferred the next audit. These findings do not describe the updated lockfile.
+The latest local audit includes the native window material dependency changes.
 
 The local audit scanned 416 dependencies. It returned zero vulnerability-class findings and six
 informational findings.
