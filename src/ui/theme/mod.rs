@@ -16,5 +16,4 @@ pub(crate) fn application_style(glass_ready: bool) -> theme::Style {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/theme.rs"]
 mod tests;

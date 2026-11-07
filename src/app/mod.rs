@@ -74,5 +74,4 @@ impl Lig {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/app.rs"]
 mod tests;

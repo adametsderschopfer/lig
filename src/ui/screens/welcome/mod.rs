@@ -10,5 +10,4 @@ pub(crate) fn view<'a, Message: 'a>(i18n: &I18n) -> Element<'a, Message> {
 }
 
 #[cfg(test)]
-#[path = "../../../tests/unit/welcome.rs"]
 mod tests;

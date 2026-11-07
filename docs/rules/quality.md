@@ -8,7 +8,7 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - Add regression tests for bug fixes.
 - Test observable behavior, boundaries, and errors.
 - Do not copy implementation logic into tests or limit tests to constant comparisons.
-- Keep tests separate from production source files.
+- Keep unit tests in adjacent `tests.rs` files and integration tests under root `tests/`.
 - Use `iced_test` for interface tests without a display or GPU.
 - Test window settings, native material completion, and opaque fallback behavior when changing transparency.
 - Preserve assertions and coverage when moving tests.
@@ -87,16 +87,18 @@ Prioritize:
 
 Use unit tests for isolated logic and integration tests for interactions between components.
 
-Keep test implementations in separate files under the root `tests/` directory.
+Keep unit tests beside the code they verify. Reserve root `tests/` for integration tests.
 
-- Store unit tests in `tests/unit/`, organized by the module or feature they verify.
-- Include unit test files through `#[cfg(test)]` and `#[path]` declarations in their owning modules.
+- Use a module directory with adjacent `mod.rs` and `tests.rs` files when unit tests are needed.
+- Declare `#[cfg(test)] mod tests;` in the owning module. Use standard Rust module discovery.
+- Do not use `#[path]` to connect unit tests to a distant test directory.
 - Keep test functions and inline test module bodies out of production source files.
 - Preserve private access through child test modules. Do not expose implementation details solely
   for testing.
 - Place integration test entry points in `tests/*.rs`. Test public behavior through the
   application's available interfaces.
 - Store shared integration helpers in `tests/common/mod.rs` when multiple tests need them.
+- Create root `tests/` when the first integration test exists. Do not add placeholder files.
 - Preserve test coverage and assertions when moving tests.
 
 Check significant changes with:

@@ -13,23 +13,30 @@ The repository contains no persistence or business operations yet.
 src/
 ├── main.rs
 ├── app/
-│   └── mod.rs
+│   ├── mod.rs
+│   └── tests.rs
 ├── ui/
 │   ├── mod.rs
 │   ├── screens/
 │   │   ├── mod.rs
-│   │   └── welcome.rs
-│   └── theme.rs
+│   │   └── welcome/
+│   │       ├── mod.rs
+│   │       └── tests.rs
+│   └── theme/
+│       ├── mod.rs
+│       └── tests.rs
 ├── i18n/
-│   └── mod.rs
+│   ├── mod.rs
+│   └── tests.rs
 └── infrastructure/
     ├── mod.rs
-    ├── graphics.rs
+    ├── graphics/
+    │   ├── mod.rs
+    │   └── tests.rs
     ├── locale.rs
     └── window_effect.rs
 
 locales/
-tests/unit/
 docs/
 ```
 
@@ -37,14 +44,14 @@ docs/
 | --- | --- |
 | `src/main.rs` | Select the startup language and connect the application with the graphics launcher |
 | `src/app/mod.rs` | Own application UI state, messages, window configuration, and Iced composition |
-| `src/ui/screens/welcome.rs` | Describe the greeting screen |
-| `src/ui/theme.rs` | Define greeting typography, text color, and background fallback |
+| `src/ui/screens/welcome/mod.rs` | Describe the greeting screen |
+| `src/ui/theme/mod.rs` | Define greeting typography, text color, and background fallback |
 | `src/i18n/mod.rs` | Select supported languages and format embedded Fluent messages |
 | `src/infrastructure/window_effect.rs` | Apply native Liquid Glass through the window handle |
 | `src/infrastructure/locale.rs` | Read the language override and native system locale |
-| `src/infrastructure/graphics.rs` | Select graphics backends and manage child processes |
+| `src/infrastructure/graphics/mod.rs` | Select graphics backends and manage child processes |
 | `locales/` | Maintain English, Russian, and Spanish catalogs |
-| `tests/unit/` | Verify behavior separately from production code |
+| Adjacent `tests.rs` files | Verify module behavior with access to private implementation |
 
 ## Current dependencies
 
@@ -108,7 +115,9 @@ Keep technical details outside the interface, following [user-facing content rul
 ## Verification
 
 Run `make check` and `make build` after changes unless the user explicitly defers execution.
-Separate test files preserve access through child modules.
+Adjacent `tests.rs` files preserve private access through `#[cfg(test)] mod tests;` declarations.
+Root `tests/` is reserved for integration tests through public interfaces or the executable.
+The project has no integration tests yet, so that directory does not exist.
 Interface tests run without a display or GPU.
 Test graphics selection independently from physical GPU availability.
 Check native rendering separately on each supported platform.

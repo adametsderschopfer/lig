@@ -87,9 +87,12 @@ libraries. Metal needs neither fallback library. See
 
 ## Tests and checks
 
-Unit tests live in `tests/unit/`. Owning modules include them with `#[cfg(test)]` and `#[path]`.
-Tests retain private access without expanding production APIs. Future integration tests belong in
-`tests/*.rs`.
+Unit tests live beside their owning modules in `tests.rs` files.
+Each tested module uses a directory with adjacent `mod.rs` and `tests.rs` files.
+The owning module declares `#[cfg(test)] mod tests;`.
+Tests retain private access without expanding production APIs.
+Integration tests belong in root `tests/` and use public interfaces or the executable.
+The project has no integration tests yet. Create that directory when the first integration test exists.
 
 Interface tests use `iced_test` with the tiny-skia CPU renderer. They require neither a display nor
 a GPU. CI runs separate jobs for Clippy, tests, type checks, and release builds on macOS, Windows,
@@ -109,13 +112,13 @@ These checks do not verify window appearance or every GPU backend.
 The project uses layers with explicit responsibilities:
 
 - `app/` owns composition, application UI state, and message routing.
-- `ui/screens/` contains screens. `ui/theme.rs` defines presentation styles.
+- `ui/screens/` contains screens. `ui/theme/` defines presentation styles.
 - `i18n/` formats messages from the three embedded catalogs.
 - `infrastructure/` handles graphics startup, native window material, and system locale access.
 
 Source paths above start inside `src/`.
 Add `application/` for user operations and `domain/` for business rules when those responsibilities appear.
-Keep test implementations under root `tests/`.
+Keep unit tests beside their modules. Reserve root `tests/` for integration tests.
 See [the architecture guide](docs/architecture.md) for dependencies and the current directory tree.
 
 ## Documentation

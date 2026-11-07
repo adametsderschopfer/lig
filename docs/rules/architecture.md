@@ -54,14 +54,16 @@ Use the following layers as implementation needs arise:
 | `app/` | Compose dependencies, configure windows, own application UI state, and route messages |
 | `ui/screens/` | Describe screens and screen-specific presentation behavior |
 | `ui/components/` | Provide reusable interface components when needed |
-| `ui/theme.rs` | Define presentation styles and design values |
+| `ui/theme/` | Define presentation styles and design values |
 | `application/` | Coordinate user operations such as creating documents, saving changes, and connecting nodes |
 | `domain/` | Define documents, graph data, algorithms, and business rules |
 | `infrastructure/` | Implement storage, operating-system access, graphics startup, audio, and external services |
 | `i18n/` | Resolve supported languages and format translated messages |
 
 Keep `main.rs` small. Use `main` and `app` to connect concrete implementations.
-Keep translation catalogs under root `locales/`. Keep test implementations under root `tests/`.
+Keep translation catalogs under root `locales/`.
+Keep unit tests in adjacent `tests.rs` files. Reserve root `tests/` for integration tests.
+Follow [test organization rules](quality.md#testing--verification) for module declarations and private access.
 
 The current application needs `app`, `ui`, `infrastructure`, and `i18n`.
 Add `application` and `domain` when actual user operations and business rules require them.

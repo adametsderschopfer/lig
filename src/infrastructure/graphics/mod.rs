@@ -148,5 +148,4 @@ fn application_exit_code(i18n: &I18n, result: iced::Result) -> u8 {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/graphics.rs"]
 mod tests;

@@ -8,7 +8,7 @@
 - Organize code by layers. Follow [architecture rules](docs/rules/architecture.md).
 - Preserve the graphics priorities in [platform rules](docs/rules/platforms.md).
 - Use native Liquid Glass when available. Follow the gray fallback policy in [platform rules](docs/rules/platforms.md).
-- Keep tests in separate files under `tests/`.
+- Keep unit tests in adjacent `tests.rs` files. Reserve root `tests/` for integration tests.
 - Add meaningful tests for behavior changes and regression tests for bug fixes.
 - Run `make check` and `make build` after all edits and before completion, commits, or pushes.
 - Fix failed checks. Do not weaken tests or skip checks.
@@ -32,7 +32,7 @@ them as repository-relative unless a link specifies otherwise.
 Always read:
 
 - [Development workflow](docs/rules/workflow.md)
-- [Rust quality, separate tests, and checks](docs/rules/quality.md)
+- [Rust quality, test organization, and checks](docs/rules/quality.md)
 - [Supported platforms and graphics priorities](docs/rules/platforms.md)
 - [Documentation and writing](docs/rules/documentation.md)
 - [User-facing content](docs/rules/user-facing-content.md)

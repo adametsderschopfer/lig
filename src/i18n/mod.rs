@@ -126,5 +126,4 @@ fn format(
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/i18n.rs"]
 mod tests;

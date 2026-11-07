@@ -12,7 +12,7 @@ The current application has one greeting screen and no business operations.
 
 Keep one Rust binary crate and organize its source by layers.
 Keep application composition and Iced message routing in `app`.
-Move screens into `ui/screens` and presentation styling into `ui/theme.rs`.
+Move screens into `ui/screens` and presentation styling into `ui/theme/`.
 Move localization into the independent `i18n` module.
 Keep native integration code in `infrastructure`.
 
