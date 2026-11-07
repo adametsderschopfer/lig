@@ -30,6 +30,15 @@ make build
 3. `cargo clippy --locked --all-targets --all-features -- -D warnings`
 4. `cargo check --locked --all-targets --all-features`
 5. `cargo test --locked --all-targets --all-features`
+6. `cargo audit --file Cargo.lock`
+
+Install cargo-audit 0.22.2 with `cargo install cargo-audit --version 0.22.2 --locked`. Run `make
+security` to check dependencies separately. This check requires network access to refresh RustSec
+advisory data. Investigate vulnerability failures. Do not ignore advisories merely to pass CI.
+
+CI runs separate lint, test, type-check, and release-build jobs for each supported platform.
+Formatting and dependency security use dedicated jobs. Dependency security checks inspect the
+complete lockfile without platform filters.
 
 Run static checks after all edits. Fix failures before committing or pushing. Use `make fmt` to
 apply formatting. Run formatting checks afterward. Use `make run` or `cargo run --locked` to start

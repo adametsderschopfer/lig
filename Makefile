@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := check
 
-.PHONY: run build release test fmt fmt-check lint typecheck check
+.PHONY: run build release test fmt fmt-check lint typecheck security check
 
 run:
 	cargo run --locked
@@ -28,4 +28,7 @@ lint:
 typecheck:
 	cargo check --locked --all-targets --all-features
 
-check: fmt-check lint typecheck test
+security:
+	cargo audit --file Cargo.lock
+
+check: fmt-check lint typecheck test security

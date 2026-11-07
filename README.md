@@ -12,6 +12,12 @@ Install [Rust through rustup](https://rustup.rs/). `rust-toolchain.toml` pins Ru
 and Clippy. Install [dprint 0.64.3](https://github.com/dprint/dprint/releases/tag/0.64.3) for
 documentation and configuration formatting. On macOS, run `brew install dprint`.
 
+Install cargo-audit 0.22.2 for dependency security checks:
+
+```sh
+cargo install cargo-audit --version 0.22.2 --locked
+```
+
 Install the platform tools:
 
 - macOS: install Xcode Command Line Tools with `xcode-select --install`.
@@ -28,17 +34,18 @@ commands directly. Application development requires no Node.js or npm.
 
 ## Commands
 
-| Command          | Purpose                                    |
-| ---------------- | ------------------------------------------ |
-| `make run`       | Start the application                      |
-| `make build`     | Build the development executable           |
-| `make release`   | Build the release executable               |
-| `make fmt`       | Apply rustfmt and dprint                   |
-| `make fmt-check` | Check formatting                           |
-| `make lint`      | Run Clippy with warnings treated as errors |
-| `make typecheck` | Check Rust types and test targets          |
-| `make test`      | Run tests                                  |
-| `make check`     | Run all development checks                 |
+| Command          | Purpose                                       |
+| ---------------- | --------------------------------------------- |
+| `make run`       | Start the application                         |
+| `make build`     | Build the development executable              |
+| `make release`   | Build the release executable                  |
+| `make fmt`       | Apply rustfmt and dprint                      |
+| `make fmt-check` | Check formatting                              |
+| `make lint`      | Run Clippy with warnings treated as errors    |
+| `make typecheck` | Check Rust types and test targets             |
+| `make test`      | Run tests                                     |
+| `make security`  | Check dependencies against RustSec advisories |
+| `make check`     | Run all development checks                    |
 
 Cargo commands also work without Make:
 
@@ -50,6 +57,7 @@ dprint check
 cargo clippy --locked --all-targets --all-features -- -D warnings
 cargo check --locked --all-targets --all-features
 cargo test --locked --all-targets --all-features
+cargo audit --file Cargo.lock
 ```
 
 The release executable is `target/release/lig`. Windows uses `target/release/lig.exe`.
@@ -75,8 +83,17 @@ Tests retain private access without expanding production APIs. Future integratio
 `tests/*.rs`.
 
 Interface tests use `iced_test` with the tiny-skia CPU renderer. They require neither a display nor
-a GPU. CI checks formatting, types, Clippy, tests, and builds across macOS, Windows, and Linux.
-Build checks do not establish visual correctness on another platform.
+a GPU. CI runs separate jobs for Clippy, tests, type checks, and release builds on macOS, Windows,
+and Linux. CI also runs dedicated formatting and dependency security jobs.
+
+[cargo-audit](https://github.com/RustSec/rustsec/tree/main/cargo-audit) checks `Cargo.lock` against
+the RustSec advisory database. The security job fails when it finds known vulnerabilities.
+Informational advisories appear as warnings. Security checks require network access to refresh
+advisory data. They do not prove that application code has no security defects. See
+[security notes](docs/security.md) for the audit policy and current warnings.
+
+Platform builds check native compilation and linking. Tests use each runner's native environment.
+These checks do not verify window appearance or every GPU backend.
 
 ## Documentation
 
