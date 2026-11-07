@@ -13,7 +13,11 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - Keep the three-platform CI matrix.
 - Check interface changes with a local application run.
 - Report visual checks separately from compilation checks.
-- Keep the glass background opaque.
+- Use native Liquid Glass for the window on supported macOS versions.
+- Show an opaque neutral gray background when Liquid Glass is unavailable or initialization fails.
+- Keep the Iced background transparent only after native material initialization succeeds.
+- Preserve native window controls and system window corners.
+- Do not simulate window glass with inset panels, gradients, outlines, shadows, or custom corner radii.
 
 ## Cross-Platform Development
 

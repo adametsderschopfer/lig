@@ -1,14 +1,21 @@
 use super::*;
 
 #[test]
-fn glass_surface_does_not_expose_the_desktop() {
-    let style = glass_surface(&Theme::Light);
-    let Some(iced::Background::Gradient(iced::Gradient::Linear(gradient))) = style.background
-    else {
-        panic!("The glass surface must have a gradient background");
-    };
+fn fallback_is_opaque_neutral_gray() {
+    let style = application_style(false);
+    let background = style.background_color;
 
-    let stops: Vec<_> = gradient.stops.iter().flatten().collect();
-    assert!(stops.len() >= 2);
-    assert!(stops.iter().all(|stop| stop.color.a == 1.0));
+    assert_eq!(background.a, 1.0);
+    assert_eq!(background.r, background.g);
+    assert_eq!(background.g, background.b);
+    assert!(style.text_color.r > background.r);
+    assert_eq!(style.text_color.a, 1.0);
+}
+
+#[test]
+fn native_glass_keeps_the_background_clear_and_text_opaque() {
+    let style = application_style(true);
+
+    assert_eq!(style.background_color, Color::TRANSPARENT);
+    assert_eq!(style.text_color.a, 1.0);
 }

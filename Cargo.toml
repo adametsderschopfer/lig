@@ -16,6 +16,7 @@ unic-langid = { version = "0.9.6", features = ["macros"] }
 [target.'cfg(target_os = "macos")'.dependencies]
 # Enable the optional macOS fallback backends in Iced's wgpu dependency.
 wgpu = { version = "27.0.1", default-features = false, features = ["vulkan-portability", "angle"] }
+window-vibrancy = "0.8.1"
 
 [dev-dependencies]
 fluent-syntax = "0.12.0"

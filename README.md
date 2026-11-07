@@ -1,8 +1,12 @@
 # lig — Life is Graph
 
-lig is a native desktop application built with Rust and Iced. The initial screen shows **Hello,
-world!** on an opaque glass surface. Iced draws the gradient, border, rounded corners, and shadow.
-The application uses a fixed light theme.
+lig is a native desktop application built with Rust and Iced.
+The initial screen shows **Hello, world!** at the center of the window.
+On macOS 26+, the application requests native Liquid Glass through `window-vibrancy`.
+The transparent background exposes the native material after initialization succeeds.
+Other platforms, older macOS versions, and initialization failures use a plain dark gray background.
+The interface uses a dark theme with native window controls.
+See [the welcome feature](docs/features/welcome.md) for behavior and verification limits.
 
 The interface and startup messages support English, Russian, and Spanish. The application uses the
 system language and falls back to English for unsupported locales. Set `LIG_LANG` to `en`, `ru`, or
@@ -107,7 +111,7 @@ The project uses layers with explicit responsibilities:
 - `app/` owns composition, application UI state, and message routing.
 - `ui/screens/` contains screens. `ui/theme.rs` defines presentation styles.
 - `i18n/` formats messages from the three embedded catalogs.
-- `infrastructure/` handles native graphics startup and system locale access.
+- `infrastructure/` handles graphics startup, native window material, and system locale access.
 
 Source paths above start inside `src/`.
 Add `application/` for user operations and `domain/` for business rules when those responsibilities appear.
@@ -120,6 +124,7 @@ See [the architecture guide](docs/architecture.md) for dependencies and the curr
 - [Welcome feature](docs/features/welcome.md)
 - [Internationalization](docs/features/i18n.md)
 - [Layered architecture](docs/adr/0004-layered-architecture.md)
+- [Native window material](docs/adr/0005-native-window-material.md)
 - [Graphics fallback](docs/adr/0002-graphics-fallback.md)
 - [Development rules](AGENTS.md)
 

@@ -25,15 +25,22 @@ fn application_boots_into_the_welcome_screen() {
 }
 
 #[test]
-fn native_window_is_opaque() {
+fn native_window_allows_transparency_only_on_macos() {
     let app = english_application();
     let settings = Program::window(&app).expect("The application must open a window");
 
-    assert!(!settings.transparent);
+    assert_eq!(settings.transparent, cfg!(target_os = "macos"));
+    assert!(settings.decorations);
+    #[cfg(target_os = "macos")]
+    {
+        assert!(settings.platform_specific.title_hidden);
+        assert!(settings.platform_specific.titlebar_transparent);
+        assert!(settings.platform_specific.fullsize_content_view);
+    }
 }
 
 #[test]
-fn background_stays_opaque_in_every_theme() {
+fn background_stays_opaque_until_native_glass_is_ready() {
     let app = english_application();
     let (state, _) = app.boot();
 
@@ -42,6 +49,26 @@ fn background_stays_opaque_in_every_theme() {
 
         assert_eq!(style.background_color.a, 1.0, "Theme: {theme:?}");
         assert_eq!(style.text_color.a, 1.0, "Text must remain opaque");
+    }
+}
+
+#[test]
+fn native_glass_result_controls_transparency() {
+    let app = english_application();
+    let (mut state, _) = app.boot();
+
+    for (ready, alpha) in [(false, 1.0), (true, 0.0), (false, 1.0)] {
+        let _ = state.update(Message::GlassConfigured(ready));
+        let style = Program::style(&app, &state, &Theme::Dark);
+
+        assert_eq!(style.background_color.a, alpha);
+        assert_eq!(style.text_color.a, 1.0);
+        let mut ui = iced_test::Simulator::with_size(
+            iced::Settings::default(),
+            (320.0, 240.0),
+            state.view(),
+        );
+        assert!(ui.find("Hello, world!").unwrap().visible_bounds().is_some());
     }
 }
 

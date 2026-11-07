@@ -10,7 +10,7 @@ Follow these rules when [AGENTS.md](../../AGENTS.md) directs you here.
 - Do not copy implementation logic into tests or limit tests to constant comparisons.
 - Keep tests separate from production source files.
 - Use `iced_test` for interface tests without a display or GPU.
-- Check window settings and Iced styles when changing opacity.
+- Test window settings, native material completion, and opaque fallback behavior when changing transparency.
 - Preserve assertions and coverage when moving tests.
 - Do not disable or weaken tests to pass checks.
 - Validate all three i18n catalogs and translated interface layouts when changing application text.

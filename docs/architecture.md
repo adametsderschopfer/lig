@@ -25,7 +25,8 @@ src/
 └── infrastructure/
     ├── mod.rs
     ├── graphics.rs
-    └── locale.rs
+    ├── locale.rs
+    └── window_effect.rs
 
 locales/
 tests/unit/
@@ -37,8 +38,9 @@ docs/
 | `src/main.rs` | Select the startup language and connect the application with the graphics launcher |
 | `src/app/mod.rs` | Own application UI state, messages, window configuration, and Iced composition |
 | `src/ui/screens/welcome.rs` | Describe the greeting screen |
-| `src/ui/theme.rs` | Define colors, spacing, typography, and surface effects |
+| `src/ui/theme.rs` | Define greeting typography, text color, and background fallback |
 | `src/i18n/mod.rs` | Select supported languages and format embedded Fluent messages |
+| `src/infrastructure/window_effect.rs` | Apply native Liquid Glass through the window handle |
 | `src/infrastructure/locale.rs` | Read the language override and native system locale |
 | `src/infrastructure/graphics.rs` | Select graphics backends and manage child processes |
 | `locales/` | Maintain English, Russian, and Spanish catalogs |
@@ -54,6 +56,7 @@ flowchart TD
     Main --> I18n[i18n]
     App --> Welcome[ui::screens::welcome]
     App --> Theme[ui::theme]
+    App --> WindowEffect[infrastructure::window_effect]
     App --> I18n
     Welcome --> Theme
     Welcome --> I18n
@@ -85,13 +88,20 @@ See [architecture rules](rules/architecture.md) for allowed dependencies and pla
 ## State and presentation
 
 The interface retains The Elm Architecture: state, messages, update, and view.
-`Lig` owns an immutable localizer and no persistent data.
+`Lig` owns an immutable localizer and the native material readiness state.
+The application stores no persistent data.
 The current greeting screen produces no messages.
 `view` delegates presentation to `ui::screens::welcome`.
-The application creates no asynchronous tasks or subscriptions yet.
+An Iced subscription reports window creation.
+The update function schedules native material initialization through `window::run`.
+Iced executes this callback through its window event loop.
+A completion message enables background transparency only after initialization succeeds.
 
 Window dimensions belong to application configuration. The theme module owns styling values.
-The application uses a light theme and an opaque glass surface.
+The application uses a dark theme and an initially opaque gray background.
+The native material module requests Liquid Glass on macOS 26+ through `window-vibrancy`.
+Other platforms and failed initialization retain the gray background.
+See [the native material decision](adr/0005-native-window-material.md) for platform boundaries and verification limits.
 See [internationalization](features/i18n.md) for language selection and fallback behavior.
 Keep technical details outside the interface, following [user-facing content rules](rules/user-facing-content.md).
 
@@ -106,6 +116,7 @@ Check native rendering separately on each supported platform.
 ## Decisions
 
 - [Layered architecture](adr/0004-layered-architecture.md)
+- [Native window material](adr/0005-native-window-material.md)
 - [Original module boundaries](adr/0001-module-boundaries.md), superseded by the layered structure
 - [Graphics fallback](adr/0002-graphics-fallback.md)
 - [Embedded localization](adr/0003-embedded-localization.md)

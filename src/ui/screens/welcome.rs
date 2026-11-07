@@ -3,14 +3,10 @@
 use crate::i18n::{I18n, Key};
 use crate::ui::theme;
 use iced::Element;
-use iced::widget::{center, container, text};
+use iced::widget::{center, text};
 
 pub(crate) fn view<'a, Message: 'a>(i18n: &I18n) -> Element<'a, Message> {
-    let surface = center(text(i18n.text(Key::WelcomeGreeting)).size(theme::GREETING_SIZE))
-        .padding(theme::SURFACE_PADDING)
-        .style(theme::glass_surface);
-
-    container(surface).padding(theme::WINDOW_PADDING).into()
+    center(text(i18n.text(Key::WelcomeGreeting)).size(theme::GREETING_SIZE)).into()
 }
 
 #[cfg(test)]
