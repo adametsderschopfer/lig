@@ -1,7 +1,8 @@
 //! Start Iced with one graphics backend at a time, in platform priority order.
 //!
-//! Each attempt has its own process: native event loops cannot be recreated, and
-//! setting the child's environment avoids mutating a multithreaded environment.
+//! Each attempt starts a separate process.
+//! Native event loops cannot restart within one process.
+//! Child environment settings avoid changes to the parent environment.
 
 use std::env;
 use std::ffi::OsString;
@@ -49,7 +50,7 @@ fn priority(os: &str) -> Option<&'static [Backend]> {
     }
 }
 
-pub fn run(application: impl FnOnce() -> iced::Result) -> ExitCode {
+pub(crate) fn run(application: impl FnOnce() -> iced::Result) -> ExitCode {
     if env::var_os(CHILD_MARKER).as_deref() == Some("1".as_ref()) {
         return ExitCode::from(application_exit_code(application()));
     }
@@ -126,5 +127,5 @@ fn application_exit_code(result: iced::Result) -> u8 {
 }
 
 #[cfg(test)]
-#[path = "../tests/unit/graphics.rs"]
+#[path = "../../tests/unit/graphics.rs"]
 mod tests;

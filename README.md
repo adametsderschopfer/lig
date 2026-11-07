@@ -1,91 +1,50 @@
 # lig — Life is Graph
 
-Нативное настольное приложение на Rust и [Iced 0.14](https://docs.rs/iced/0.14.0/iced/). Стартовый
-экран показывает **Hello, world!** на непрозрачной поверхности в стиле Liquid Glass: мягкий
-градиент, светлая окантовка, скругления и тень. Это кроссплатформенное оформление Iced, а не
-системный материал Apple.
+lig is a native desktop application built with Rust and Iced. The initial screen shows **Hello,
+world!** on an opaque glass surface. Iced draws the gradient, border, rounded corners, and shadow.
+The application uses a fixed light theme.
 
-Поддерживаемые платформы: **macOS, Windows и Linux**. Системная рамка окна сохранена: окно можно
-перемещать, изменять его размер и закрывать обычными средствами ОС.
+macOS is the primary development platform. The project also targets Windows and Linux.
 
-## Подготовка
+## Setup
 
-- Установите [Rust через rustup](https://rustup.rs/). Rust 1.90.0, `rustfmt` и `clippy` закреплены в
-  `rust-toolchain.toml`.
-- Для форматирования документации и конфигурации установите
-  [dprint 0.64.3](https://github.com/dprint/dprint/releases/tag/0.64.3). На macOS доступна команда
-  `brew install dprint`. Node.js/npm не требуются.
-- Для коротких команд `make ...` нужен GNU Make. На macOS он доступен в Xcode Command Line Tools
-  (`xcode-select --install`), на Linux — в инструментах сборки.
-- На Windows установите Rust MSVC и Visual Studio Build Tools с компонентом **Desktop development
-  with C++**. GNU Make можно установить отдельно, например через `winget install GnuWin32.Make`, или
-  использовать команды Cargo и dprint напрямую.
-- На Ubuntu / Debian установите зависимости:
+Install [Rust through rustup](https://rustup.rs/). `rust-toolchain.toml` pins Rust 1.90.0, rustfmt,
+and Clippy. Install [dprint 0.64.3](https://github.com/dprint/dprint/releases/tag/0.64.3) for
+documentation and configuration formatting. On macOS, run `brew install dprint`.
 
-  ```sh
-  sudo apt-get install build-essential pkg-config libx11-dev libxkbcommon-dev libwayland-dev libudev-dev
-  ```
+Install the platform tools:
 
-## Запуск и сборка
+- macOS: install Xcode Command Line Tools with `xcode-select --install`.
+- Windows: install Visual Studio Build Tools with **Desktop development with C++**. Use Rust's MSVC
+  toolchain.
+- Ubuntu or Debian: install the packages below.
 
 ```sh
-make run
-make release
+sudo apt-get install build-essential pkg-config libx11-dev libxkbcommon-dev libwayland-dev libudev-dev
 ```
 
-Эквивалентные команды без Make:
+GNU Make provides command shortcuts. Windows users must install GNU Make separately or run Cargo
+commands directly. Application development requires no Node.js or npm.
+
+## Commands
+
+| Command          | Purpose                                    |
+| ---------------- | ------------------------------------------ |
+| `make run`       | Start the application                      |
+| `make build`     | Build the development executable           |
+| `make release`   | Build the release executable               |
+| `make fmt`       | Apply rustfmt and dprint                   |
+| `make fmt-check` | Check formatting                           |
+| `make lint`      | Run Clippy with warnings treated as errors |
+| `make typecheck` | Check Rust types and test targets          |
+| `make test`      | Run tests                                  |
+| `make check`     | Run all development checks                 |
+
+Cargo commands also work without Make:
 
 ```sh
 cargo run --locked
 cargo build --locked --release
-```
-
-Готовый бинарный файл: `target/release/lig`, на Windows — `target/release/lig.exe`.
-
-## Приоритет графических бэкендов
-
-| ОС      | Порядок выбора               |
-| ------- | ---------------------------- |
-| macOS   | Metal → Vulkan → OpenGL      |
-| Windows | Vulkan → DirectX 12 → OpenGL |
-| Linux   | Vulkan → OpenGL              |
-
-Приложение пробует бэкенды последовательно. Если Iced не может создать графический контекст,
-запускается следующая попытка. После нормального закрытия окна или ошибки, не связанной с
-инициализацией графики, приложение завершается без повторного запуска.
-
-Каждая попытка запускает тот же бинарный файл с одним `WGPU_BACKEND` и `ICED_BACKEND=wgpu`. Это
-обеспечивает порядок выбора: обычный список `WGPU_BACKEND` задаёт набор, а не приоритет. Переменная
-`LIG_GRAPHICS_CHILD` служебная; вручную задавать её не нужно. Программный рендерер tiny-skia
-используется в UI-тестах и не включается вместо резервного GPU-бэкенда.
-
-На macOS резервный Vulkan требует установленного Vulkan loader и MoltenVK, а OpenGL/GLES — библиотек
-ANGLE/EGL. Соответствующие возможности wgpu включены при сборке; эти внешние библиотеки не
-поставляются вместе с приложением. Metal работает без них. Подробности — в
-[документации wgpu](https://docs.rs/wgpu/27.0.1/wgpu/).
-
-## Проверки
-
-```sh
-make check
-make build
-```
-
-| Команда          | Назначение                                 |
-| ---------------- | ------------------------------------------ |
-| `make run`       | Запустить приложение                       |
-| `make build`     | Собрать отладочный бинарный файл           |
-| `make release`   | Собрать релизный бинарный файл             |
-| `make fmt`       | Применить rustfmt и dprint                 |
-| `make fmt-check` | Проверить форматирование                   |
-| `make lint`      | Запустить Clippy с запретом предупреждений |
-| `make typecheck` | Проверить Rust-код и тестовые цели         |
-| `make test`      | Запустить тесты                            |
-| `make check`     | Выполнить все проверки                     |
-
-Все проверки можно запустить без Make на любой поддерживаемой ОС:
-
-```sh
 cargo fmt --all -- --check
 dprint check
 cargo clippy --locked --all-targets --all-features -- -D warnings
@@ -93,32 +52,39 @@ cargo check --locked --all-targets --all-features
 cargo test --locked --all-targets --all-features
 ```
 
-Rust форматируется через rustfmt, Markdown / JSON / YAML — через dprint. UI-тесты используют
-`iced_test` и программный рендерер `tiny-skia`, поэтому работают без дисплея и GPU. Они проверяют
-видимость и центрирование приветствия при разных размерах окна, название приложения и непрозрачность
-фона.
+The release executable is `target/release/lig`. Windows uses `target/release/lig.exe`.
 
-GitHub Actions запускает сборку, Clippy, проверку типов и тесты на macOS, Windows и Linux.
-Форматирование проверяется отдельным заданием. Эти проверки не заменяют визуальную проверку окна на
-каждой ОС.
+## Graphics backends
 
-## Test organization
+| Platform | Priority                     |
+| -------- | ---------------------------- |
+| macOS    | Metal → Vulkan → OpenGL      |
+| Windows  | Vulkan → DirectX 12 → OpenGL |
+| Linux    | Vulkan → OpenGL              |
 
-Keep unit tests in `tests/unit/`, separate from production files in `src/`. Each owning module
-includes its test file through `#[cfg(test)]` and `#[path]`. These child modules retain access to
-private implementation details. Cargo runs them through `make test` or `cargo test --locked
---all-targets --all-features`.
+The launcher tries each backend separately. Only graphics initialization failures trigger the next
+attempt. Normal closure and unrelated failures stop the launcher. On macOS, Vulkan requires a Vulkan
+loader and MoltenVK. OpenGL/GLES requires ANGLE/EGL libraries. The application does not bundle these
+libraries. Metal needs neither fallback library. See
+[the graphics decision](docs/adr/0002-graphics-fallback.md) for implementation details.
 
-Place future integration test entry points in `tests/*.rs`. The current files in `tests/unit/`
-remain unit tests.
+## Tests and checks
 
-## Project structure
+Unit tests live in `tests/unit/`. Owning modules include them with `#[cfg(test)]` and `#[path]`.
+Tests retain private access without expanding production APIs. Future integration tests belong in
+`tests/*.rs`.
 
-- `src/main.rs` — application setup, window settings, and the initial screen.
-- `src/graphics.rs` — graphics backend priorities and fallback startup.
-- `tests/unit/app.rs` — interface and application configuration tests.
-- `tests/unit/graphics.rs` — graphics priorities and fallback tests.
-- `Makefile` — commands for running, building, formatting, and checking the project.
-- `dprint.json` — documentation formatter settings and pinned plugin versions.
-- `.github/workflows/ci.yml` — checks for all three platforms.
-- `AGENTS.md` — mandatory development rules.
+Interface tests use `iced_test` with the tiny-skia CPU renderer. They require neither a display nor
+a GPU. CI checks formatting, types, Clippy, tests, and builds across macOS, Windows, and Linux.
+Build checks do not establish visual correctness on another platform.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Welcome feature](docs/features/welcome.md)
+- [Module boundaries](docs/adr/0001-module-boundaries.md)
+- [Graphics fallback](docs/adr/0002-graphics-fallback.md)
+- [Development rules](AGENTS.md)
+
+English is the primary documentation language. Russian translations are secondary when provided.
+Update affected documentation with each implementation change.

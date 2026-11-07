@@ -1,62 +1,58 @@
-# Правила разработки lig
+# Development Rules for lig
 
-`lig` означает **Life is Graph**. Это нативное настольное приложение на Rust + Iced.
+`lig` means **Life is Graph**. Build a native Rust application with Iced.
 
-## Поддерживаемые платформы
+## Required platform behavior
 
-- Сохраняй поддержку **macOS, Windows и Linux** при каждом изменении.
-- Сохраняй приоритеты графических бэкендов: macOS — Metal → Vulkan → OpenGL; Windows — Vulkan →
-  DirectX 12 → OpenGL; Linux — Vulkan → OpenGL. Переход к следующему бэкенду допускается только при
-  ошибке инициализации графики.
-- Используй кроссплатформенные API Iced и стандартной библиотеки. Платформенный код изолируй через
-  `cfg` и предоставляй рабочее поведение для остальных ОС.
-- Не добавляй зависимости от Unix shell в общие команды разработки и тестирования.
-- Сохраняй матрицу CI для трёх ОС. Проверяй изменение интерфейса локальным запуском; не выдавай
-  успешную сборку за визуальную проверку на другой платформе.
+- Maintain macOS, Windows, and Linux support.
+- Prioritize Metal, Vulkan, then OpenGL on macOS.
+- Prioritize Vulkan, DirectX 12, then OpenGL on Windows.
+- Prioritize Vulkan, then OpenGL on Linux.
+- Retry only after graphics initialization fails.
+- Use cross-platform APIs. Isolate platform-specific code with `cfg`.
+- Keep the three-platform CI matrix.
+- Check interface changes with a local application run.
+- Report visual checks separately from compilation checks.
+- Keep the glass background opaque.
 
-## Тесты
+## Required tests
 
-- Для новой функциональности и изменений поведения обязательно добавляй или обновляй содержательные
-  тесты. Для исправления ошибки добавляй регрессионный тест.
-- Проверяй наблюдаемое поведение, граничные случаи и ошибки; не копируй реализацию в тест и не
-  ограничивайся проверкой констант.
-- Для UI используй `iced_test`; тесты должны работать без дисплея и GPU.
-- Фон в стиле Liquid Glass должен оставаться непрозрачным. Проверяй это и в настройках окна, и в
-  стиле Iced; фон рабочего стола не должен просвечивать.
-- Не отключай и не ослабляй тесты ради прохождения проверок.
+- Add meaningful tests for new functionality and behavior changes.
+- Add regression tests for bug fixes.
+- Test observable behavior, boundaries, and errors.
+- Do not copy implementation logic into tests or limit tests to constant comparisons.
+- Keep tests separate from production source files.
+- Use `iced_test` for interface tests without a display or GPU.
+- Check window settings and Iced styles when changing opacity.
+- Preserve assertions and coverage when moving tests.
+- Do not disable or weaken tests to pass checks.
 
-## Обязательные проверки
+## Required checks
 
-Перед завершением работы, коммитом и push все проверки должны проходить:
+Run these commands before completion, commits, and pushes:
 
 ```sh
 make check
 make build
 ```
 
-`make check` включает:
+`make check` runs these checks:
 
-1. `cargo fmt --all -- --check` — форматирование Rust.
-2. `dprint check` — форматирование Markdown, JSON и YAML.
-3. `cargo clippy --locked --all-targets --all-features -- -D warnings` — линтер.
-4. `cargo check --locked --all-targets --all-features` — проверка типов.
-5. `cargo test --locked --all-targets --all-features` — тесты.
+1. `cargo fmt --all -- --check`
+2. `dprint check`
+3. `cargo clippy --locked --all-targets --all-features -- -D warnings`
+4. `cargo check --locked --all-targets --all-features`
+5. `cargo test --locked --all-targets --all-features`
 
-- После всех изменений запускай линтеры и проверку типов. Исправляй ошибки до коммита и push; не
-  используй пропуски проверок как обход.
-- Для автоматического форматирования используй `make fmt`, затем повтори проверку форматирования.
-- Запускай приложение через `make run` или `cargo run --locked`. Не добавляй Node.js/npm для
-  запуска, сборки и проверок Rust-проекта.
-- Makefile должен работать с GNU Make на трёх ОС, без Unix-специфичных shell-команд. Все проверки
-  также должны запускаться напрямую через Cargo и dprint.
-- Обновляй и коммить `Cargo.lock` при изменении зависимостей; версии плагинов dprint закрепляй в
-  `dprint.json`.
-- Проверяй результат CI на всех трёх ОС и сообщай о недоступных проверках явно.
+Run static checks after all edits. Fix failures before committing or pushing. Use `make fmt` to
+apply formatting. Run formatting checks afterward. Use `make run` or `cargo run --locked` to start
+the application. Do not introduce Node.js or npm for application development. Keep shared Make
+commands independent of Unix shell utilities. Keep equivalent Cargo and dprint commands available on
+every supported platform. Commit dependency changes with `Cargo.lock`. Pin formatter plugins in
+`dprint.json`. Check CI results on every supported platform. Report unavailable checks explicitly.
 
-macOS — основная платформа разработки. Указание Windows и Linux как будущих платформ в архитектурных
-правилах ниже не отменяет текущую поддержку сборки, тестов и приоритетов графических бэкендов на
-этих ОС. Обязательные проверки выполняются через `make check` и `make build`; действующий запрет
-`unsafe_code` в Cargo.toml сохраняется.
+macOS is the primary development platform. Preserve existing Windows and Linux compatibility. Cargo
+forbids unsafe code in this crate.
 
 ## Project Architecture & Engineering Rules
 
@@ -66,7 +62,7 @@ macOS — основная платформа разработки. Указан
 - **UI Framework:** Iced.
 - **Rendering:** Iced's native rendering stack, with GPU acceleration where appropriate.
 - **Primary Platform:** macOS.
-- **Future Platforms:** Windows and Linux.
+- **Additional Platforms:** Windows and Linux.
 - **Architecture:** Modular Monolith + The Elm Architecture + pragmatic Clean Architecture.
 - **Code Organization:** Feature-Based.
 
@@ -317,7 +313,7 @@ Follow idiomatic Rust practices.
 - Prefer borrowing when appropriate.
 - Avoid excessive `Arc<Mutex<T>>` and shared mutable state.
 - Use async only when beneficial.
-- Use `unsafe` only when unavoidable and document its safety invariants.
+- Do not add unsafe code. Cargo forbids it in this crate.
 - Prefer established, actively maintained libraries.
 - Minimize unnecessary dependencies.
 - Pin dependencies reproducibly and commit `Cargo.lock`.
@@ -380,9 +376,10 @@ Develop for macOS first without unnecessarily coupling the application to macOS.
 
 ### 13. Documentation & Architectural Decisions
 
-Documentation is a required part of application development. A feature or change to application
-behavior, configuration, storage, architecture, or development workflows is not complete until its
-documentation is updated in the same change and commit or pull request.
+Documentation is a required part of application development. Update documentation when changing
+application behavior, configuration, storage, architecture, or development workflows. Include
+documentation in the same commit or pull request. Complete documentation before declaring the change
+finished.
 
 Before implementation, read the relevant project documentation. After implementation, update the
 existing documentation or create the necessary document if none exists.
@@ -393,22 +390,20 @@ Maintain the following sources of truth:
   build, and verification commands.
 - `docs/architecture.md` — the implemented system structure, module responsibilities, data flow, and
   dependency boundaries.
-- `docs/features/<feature>.md` — documentation for features that need a detailed explanation:
-  purpose, user scenarios, behavior, data model, relevant interfaces, errors, and limitations.
-  Describe persistence and migrations when applicable.
+- `docs/features/<feature>.md` — explain feature purpose, user scenarios, behavior, data models,
+  interfaces, errors, and limitations. Describe persistence and migrations when applicable.
 - `docs/adr/` — lightweight Architecture Decision Records for significant architectural decisions:
   context, chosen approach, alternatives, trade-offs, and consequences.
 
 Documentation rules:
 
-- English is the primary language for all project documentation and code comments, including README,
-  architecture documents, feature documentation, ADRs, Rustdoc, and inline comments.
-- Russian is the secondary language. When both languages are provided, put the English version first
-  and the Russian version second, or link from the English document to a separate Russian
-  translation.
-- Write new documentation and comments in English first. When substantively updating existing
-  Russian-only documentation or comments, provide an English version of the affected content and
-  retain Russian as a secondary translation where useful.
+- Write project documentation and code comments primarily in English. This includes README,
+  architecture documents, feature documents, ADRs, Rustdoc, and inline comments.
+- Russian is the secondary language. Put English before Russian when providing both languages.
+  Alternatively, link from the English document to a Russian translation.
+- Write new documentation and comments in English first. Translate affected Russian-only
+  documentation or comments into English during substantive updates. Retain Russian as a secondary
+  translation where useful.
 - Keep translations consistent with the English version; update affected translations in the same
   change. This language rule does not determine the application's UI language or the language used
   to communicate with the user.
@@ -421,10 +416,9 @@ Documentation rules:
 - Create documents when they contain useful information; do not create empty templates or
   directories.
 - Do not duplicate obvious code or document trivial implementation details.
-- For changes that do not affect documented behavior or workflows, such as formatting-only changes,
-  no unrelated documentation rewrite is required.
-- Before declaring work complete, review documentation alongside the code, run its formatting
-  checks, and mention the documentation changes in the completion report.
+- Skip unrelated documentation changes when behavior and workflows remain unchanged.
+- Review documentation alongside the code before declaring work complete. Run documentation
+  formatting checks. Describe documentation changes in the completion report.
 
 #### Clear Technical Writing
 
