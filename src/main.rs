@@ -72,4 +72,5 @@ fn glass_surface(_theme: &Theme) -> container::Style {
 }
 
 #[cfg(test)]
+#[path = "../tests/unit/app.rs"]
 mod tests;

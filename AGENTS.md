@@ -339,6 +339,18 @@ Prioritize:
 
 Use unit tests for isolated logic and integration tests for interactions between components.
 
+Keep test implementations in separate files under the root `tests/` directory.
+
+- Store unit tests in `tests/unit/`, organized by the module or feature they verify.
+- Include unit test files through `#[cfg(test)]` and `#[path]` declarations in their owning modules.
+- Keep test functions and inline test module bodies out of production source files.
+- Preserve private access through child test modules. Do not expose implementation details solely
+  for testing.
+- Place integration test entry points in `tests/*.rs`. Test public behavior through the
+  application's available interfaces.
+- Store shared integration helpers in `tests/common/mod.rs` when multiple tests need them.
+- Preserve test coverage and assertions when moving tests.
+
 Check significant changes with:
 
 ```bash

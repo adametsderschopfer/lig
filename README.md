@@ -102,12 +102,23 @@ GitHub Actions запускает сборку, Clippy, проверку тип�
 Форматирование проверяется отдельным заданием. Эти проверки не заменяют визуальную проверку окна на
 каждой ОС.
 
-## Структура
+## Test organization
 
-- `src/main.rs` — приложение, настройки окна и стартовый экран.
-- `src/graphics.rs` — приоритеты GPU-бэкендов и последовательный запуск с резервными вариантами.
-- `src/tests.rs` — тесты интерфейса и конфигурации приложения.
-- `Makefile` — команды запуска, сборки, форматирования и проверок.
-- `dprint.json` — настройки и закреплённые версии форматтеров документации.
-- `.github/workflows/ci.yml` — проверки трёх платформ.
-- `AGENTS.md` — обязательные правила работы над проектом.
+Keep unit tests in `tests/unit/`, separate from production files in `src/`. Each owning module
+includes its test file through `#[cfg(test)]` and `#[path]`. These child modules retain access to
+private implementation details. Cargo runs them through `make test` or `cargo test --locked
+--all-targets --all-features`.
+
+Place future integration test entry points in `tests/*.rs`. The current files in `tests/unit/`
+remain unit tests.
+
+## Project structure
+
+- `src/main.rs` — application setup, window settings, and the initial screen.
+- `src/graphics.rs` — graphics backend priorities and fallback startup.
+- `tests/unit/app.rs` — interface and application configuration tests.
+- `tests/unit/graphics.rs` — graphics priorities and fallback tests.
+- `Makefile` — commands for running, building, formatting, and checking the project.
+- `dprint.json` — documentation formatter settings and pinned plugin versions.
+- `.github/workflows/ci.yml` — checks for all three platforms.
+- `AGENTS.md` — mandatory development rules.
