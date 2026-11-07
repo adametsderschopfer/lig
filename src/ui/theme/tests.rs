@@ -5,6 +5,7 @@ fn fallback_is_opaque_neutral_gray() {
     let style = application_style(false);
     let background = style.background_color;
 
+    assert_eq!(background, Color::from_rgb8(24, 24, 24));
     assert_eq!(background.a, 1.0);
     assert_eq!(background.r, background.g);
     assert_eq!(background.g, background.b);

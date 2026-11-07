@@ -27,7 +27,7 @@ The native material lets users see content behind the window.
 Keep system window corners and controls. Add no inset panel, gradient, outline, shadow, or custom corner radius.
 Use a dark theme with light greeting text.
 
-Use an opaque gray background (`#212121`) on Windows, Linux, and older macOS versions.
+Use an opaque gray background (`#181818`) on Windows, Linux, and older macOS versions.
 Use the same background when native material initialization fails.
 Show no technical status message for this fallback.
 
